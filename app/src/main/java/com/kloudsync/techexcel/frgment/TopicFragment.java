@@ -82,13 +82,10 @@ public class TopicFragment extends MyFragment implements View.OnClickListener, S
     public void eventGroupInfo(List<TeamSpaceBean> list) {
 
         Log.e("duang", "biubiu");
-
         getTeamhaha();
-
         spacesList.clear();
         spacesList.addAll(list);
         spaceAdapter.notifyDataSetChanged();
-
         getSyncRoomList();
 
     }
@@ -223,6 +220,7 @@ public class TopicFragment extends MyFragment implements View.OnClickListener, S
 
     @Override
     public void onClick(View v) {
+        //fffff
         switch (v.getId()) {
             case R.id.teamrl:
 //                Intent intent = new Intent(getActivity(), TeamPropertyActivity.class);
