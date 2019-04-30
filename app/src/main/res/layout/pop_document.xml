@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/tv_view"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:drawableLeft="@drawable/eye_favor"
+        android:padding="10dp"
+        android:drawablePadding="5dp"
+        android:gravity="center"
+        android:textColor="@color/darkgrey"
+        android:text="@string/viewcourse"/>
+    <TextView
+        android:id="@+id/tv_share"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:drawableLeft="@drawable/shareyinxiang"
+        android:padding="10dp"
+        android:drawablePadding="5dp"
+        android:gravity="center"
+        android:textColor="@color/darkgrey"
+        android:text="share"/>
+    <TextView
+        android:id="@+id/tv_move"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:drawableLeft="@drawable/move"
+        android:padding="10dp"
+        android:drawablePadding="5dp"
+        android:gravity="center"
+        android:textColor="@color/darkgrey"
+        android:text="Move"/>
+
+    <TextView
+        android:id="@+id/tv_edit"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:drawableLeft="@drawable/editdddd"
+        android:padding="10dp"
+        android:drawablePadding="5dp"
+        android:gravity="center"
+        android:textColor="@color/darkgrey"
+        android:text="Edit"/>
+
+    <TextView
+        android:id="@+id/tv_delete"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:drawableLeft="@drawable/trash_favor"
+        android:padding="10dp"
+        android:drawablePadding="5dp"
+        android:gravity="center"
+        android:textColor="@color/darkgrey"
+        android:text="@string/Delete"/>
+
+</LinearLayout>

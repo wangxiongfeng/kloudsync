@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/simpledraweeview"
+        android:layout_width="43dp"
+        android:layout_height="43dp"
+        android:layout_margin="8dp"
+        fresco:fadeDuration="500"
+        fresco:failureImage="@drawable/hello"
+        fresco:failureImageScaleType="centerInside"
+        fresco:placeholderImage="@drawable/hello"
+        fresco:placeholderImageScaleType="fitCenter"
+        fresco:roundAsCircle="true" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/simpledraweeview"
+        android:text="ddd" />
+
+    <ImageView
+        android:id="@+id/moreOpation"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="right"
+        android:padding="7dp"
+        android:src="@drawable/more_favor" />
+
+</RelativeLayout>

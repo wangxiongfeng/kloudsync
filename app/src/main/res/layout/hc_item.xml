@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp"
+    android:orientation="vertical">
+
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/img_url"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:scaleType="center"
+        android:layout_margin="10dp"
+        fresco:fadeDuration="500"
+        fresco:failureImage="@drawable/biubiu1"
+        fresco:failureImageScaleType="centerInside"
+        fresco:placeholderImage="@drawable/biubiu2"
+        fresco:placeholderImageScaleType="fitCenter"/>
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textColor="@color/darkgrey"
+        android:textSize="8sp"
+        android:text="Forgotten yesterday, the wind has dried up.I want to reunite with you on road."/>
+
+
+</LinearLayout>

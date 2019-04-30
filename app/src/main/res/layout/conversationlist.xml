@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:visibility="gone"
+        android:background="@color/green" >
+
+        <RelativeLayout
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true">
+
+            <ImageView
+                android:id="@+id/img_notice"
+
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:padding="10dp"
+                android:src="@drawable/home_page_notice_icon_unchecked"/>
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true">
+
+                <TextView
+                    android:id="@+id/tv_ns"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="12dp"
+                    android:background="@drawable/home_page_red_icon"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:text="12"
+                    android:textColor="@color/white"
+                    android:textSize="5sp" />
+
+            </FrameLayout>
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        
+        <ImageView 
+            android:id="@+id/img_add"
+            android:layout_width="25dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"            
+            android:src="@drawable/add_w"/>
+    </RelativeLayout>
+
+    <!--<include layout="@layout/searchcontact" />-->
+    <include layout="@layout/search_common" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="95dp"
+        android:visibility="gone"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/lin_myroom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/class_klassroom"
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/newgrey"
+                android:textSize="15sp"
+                android:text="@string/MyKlassroom"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lin_join"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/class_join"
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/newgrey"
+                android:textSize="15sp"
+                android:text="@string/join2"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lin_schedule"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/class_schedule"
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/newgrey"
+                android:textSize="15sp"
+                android:text="@string/Schedule"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey"/>
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+        
+        <LinearLayout
+            android:id="@+id/lin_dialogue"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/lightgrey"
+            android:visibility="gone"
+            android:orientation="vertical" >
+
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/main_viewpager"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="#ffffff"
+                android:flipInterval="30"
+                android:persistentDrawingCache="animation" />
+        </LinearLayout>
+        
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+            
+            <LinearLayout 
+            	android:id="@+id/lin_none"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/lightgrey"
+                android:orientation="vertical">
+                
+                <ImageView 
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_margin="30dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/chats_d"/>
+                
+                <TextView 
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:textColor="@color/newgrey"
+                    android:textSize="15sp"
+                    android:text="@string/To_Chat_Top"/>
+                
+                <TextView
+                    android:id="@+id/tv_startdialogue"
+                    android:layout_width="200dp"
+                    android:layout_height="38dp"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/login_greenback"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:text="@string/To_Chat"
+                    android:textColor="@color/white"
+                    android:textSize="15sp" />
+                
+            </LinearLayout>
+        </FrameLayout>
+
+    </RelativeLayout>
+
+    <!-- <fragment
+        android:id="@+id/conversationlist"
+        android:name="io.rong.imkit.fragment.ConversationListFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></fragment> -->
+    <!--<fragment-->
+    <!--android:name="io.rong.app.fragment.language.RongSettingFragment"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"></fragment>-->
+</LinearLayout>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/whiteback"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Delete Document"
+        android:textSize="16sp"
+        android:textColor="@color/darkgrey"
+        android:layout_gravity="center"/>
+
+    <ImageView
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center"
+        android:src="@drawable/gantan"
+        android:layout_margin="10dp"/>
+
+    <TextView
+        android:id="@+id/content"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textSize="12sp"
+        android:textColor="@color/darkgrey"
+        android:text="Are you sure you want to delete the selected document?"/>
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_margin="30dp"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:background="@drawable/whiteblue_back"
+            android:text="@string/Cancel"
+            android:textSize="15sp"
+            android:textColor="@color/text_bw"
+            android:layout_marginRight="15dp"/>
+
+        <Button
+            android:id="@+id/btn_ok"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:background="@drawable/bluewhite_back"
+            android:text="@string/OK"
+            android:textSize="15sp"
+            android:textColor="@color/text_wb"/>
+    </LinearLayout>
+
+</LinearLayout>

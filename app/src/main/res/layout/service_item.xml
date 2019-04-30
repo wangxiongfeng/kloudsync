@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/c6"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/c7"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/entercustomer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <com.kloudsync.techexcel.view.CircleImageView
+                    android:id="@+id/image"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/hello" />
+
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:singleLine="true"
+                    android:text="晨晨妈"
+                    android:textColor="@color/c5" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/concerValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/fenghan"
+                android:text="关注点"
+                android:textColor="@color/c1" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:text="@string/inprogress"
+            android:textColor="@color/qianred" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/c7"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="0.8dp"
+            android:layout_marginLeft="10dp"
+            android:background="@color/c3" />
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/kename"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:background="@color/white"
+        android:padding="10dp"
+        android:singleLine="true"
+        android:textColor="@color/c5" />
+
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/c7"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="0.8dp"
+            android:layout_marginLeft="10dp"
+            android:background="@color/c3" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/lineitems"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/c7"
+        android:minHeight="10dp"
+        android:orientation="vertical"
+        android:visibility="gone"></LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/c7"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp">
+
+        <TextView
+            android:id="@+id/num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:padding="5dp"
+            android:text="服务"
+            android:textColor="@color/c5"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/ifclose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/num"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/sendsms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/newfriend_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="5dp">
+
+                <ImageView
+                    android:id="@+id/smsicon"
+                    android:layout_width="20dp"
+                    android:layout_height="15dp"
+                    android:layout_marginRight="5dp"
+                    android:src="@drawable/sendsms"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/sendcourse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/message"
+                    android:textColor="@color/c5" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/issmslinear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/modifyservice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/newfriend_bg"
+                    android:padding="5dp"
+                    android:text="@string/modify"
+                    android:textColor="@color/c5" />
+
+                <TextView
+                    android:id="@+id/confirmfinish"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/newfriend_bgtwo"
+                    android:padding="5dp"
+                    android:text="@string/start"
+                    android:textColor="@color/qianred" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>
