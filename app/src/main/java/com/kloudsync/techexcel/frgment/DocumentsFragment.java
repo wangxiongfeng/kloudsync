@@ -242,7 +242,7 @@ public class DocumentsFragment extends MyFragment implements View.OnClickListene
                     ArrayList<Space> sl = customer.getSpaceList();
                     for (int j = 0; j < sl.size(); j++) {
                         Space sp = sl.get(j);
-                        if(sp.getItemID() == itemID){
+                        if(sp.getItemID() == lesson.getSpaceid()){
                             sl.remove(j);
                             break;
                         }
@@ -251,7 +251,7 @@ public class DocumentsFragment extends MyFragment implements View.OnClickListene
 
                 SpaceDeletePopup spaceDeletePopup = new SpaceDeletePopup();
                 spaceDeletePopup.getPopwindow(getActivity());
-                spaceDeletePopup.setSP(cuslist, itemID);
+                spaceDeletePopup.setSP(cuslist, lesson.getSpaceid());
                 spaceDeletePopup.ChangeMove(lesson);
                 spaceDeletePopup.setFavoritePoPListener(new SpaceDeletePopup.FavoritePoPListener() {
                     @Override
