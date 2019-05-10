@@ -209,13 +209,7 @@ public class TopicFragment extends MyFragment implements View.OnClickListener, S
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.teamrl:
-//                Intent intent = new Intent(getActivity(), TeamPropertyActivity.class);
-//                if (teamSpaceBean.getItemID() != 0) {
-//                    intent.putExtra("ItemID", teamSpaceBean.getItemID());
-//                    startActivity(intent);
-//                } else {
-//                    Toast.makeText(getActivity(), "请先选择Team", Toast.LENGTH_LONG).show();
-//                }
+
                 break;
             case R.id.switchteam:
                 Intent intent2 = new Intent(getActivity(), SwitchTeamActivity.class);
