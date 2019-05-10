@@ -44,7 +44,6 @@ public class SyncRoomPropertyPopup implements View.OnClickListener {
     private RelativeLayout selectpurpose;
     private TextView customerservicevalue;
 
-
     public void getPopwindow(Context context) {
         this.mContext = context;
         width = mContext.getResources().getDisplayMetrics().widthPixels;

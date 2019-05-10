@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -52,6 +53,7 @@ public class SyncRoomAdapter extends RecyclerView.Adapter<SyncRoomAdapter.Recycl
     }
 
     public interface OnItemLectureListener {
+
         void view(SyncRoomBean syncRoomBean);
 
         void deleteSuccess();
@@ -61,7 +63,6 @@ public class SyncRoomAdapter extends RecyclerView.Adapter<SyncRoomAdapter.Recycl
         void dismiss();
 
         void open();
-
 
     }
 
@@ -83,23 +84,29 @@ public class SyncRoomAdapter extends RecyclerView.Adapter<SyncRoomAdapter.Recycl
     public void onBindViewHolder(final RecycleHolder holder, int position) {
         final SyncRoomBean syncRoomBean = list.get(position);
         holder.title.setText(syncRoomBean.getName());
-        int ii = position % 3;
-        if (ii == 1) {
-            holder.tv1.setBackgroundColor(Color.parseColor("#34AA44"));
-        } else if (ii == 2) {
-            holder.tv1.setBackgroundColor(Color.parseColor("#1665D8"));
+
+        int documentCount = syncRoomBean.getDocumentCount();
+        int memberCount = syncRoomBean.getMemberCount();
+        int meetingCount = syncRoomBean.getMeetingCount();
+        holder.documentcount.setText(documentCount + (documentCount == 1 ? " document" : " documents"));
+        holder.membercount.setText(memberCount + (memberCount == 1 ? " member" : " members"));
+        holder.meetingcount.setText(meetingCount + (meetingCount == 1 ? " meeting" : " meetings"));
+        if (documentCount == 0) {
+            holder.documentcount.setVisibility(View.GONE);
         } else {
-            holder.tv1.setBackgroundColor(Color.parseColor("#F6AB2F"));
+            holder.documentcount.setVisibility(View.VISIBLE);
         }
-        if (!TextUtils.isEmpty(syncRoomBean.getName())) {
-            holder.tv1.setText(syncRoomBean.getName().substring(0, 1));
+        if (memberCount == 0) {
+            holder.membercount.setVisibility(View.GONE);
+        } else {
+            holder.membercount.setVisibility(View.VISIBLE);
         }
-
-        holder.membercount.setText(syncRoomBean.getMemberCount()+"");
-        holder.documentcount.setText(syncRoomBean.getDocumentCount()+"");
-        holder.meetingcount.setText(syncRoomBean.getMeetingCount()+"");
-
-        holder.kk.setOnClickListener(new View.OnClickListener() {
+        if (meetingCount == 0) {
+            holder.meetingcount.setVisibility(View.GONE);
+        } else {
+            holder.meetingcount.setVisibility(View.VISIBLE);
+        }
+        holder.moreOpation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SyncRoomOperatePopup syncRoomOperatePopup = new SyncRoomOperatePopup();
@@ -117,12 +124,21 @@ public class SyncRoomAdapter extends RecyclerView.Adapter<SyncRoomAdapter.Recycl
                     }
 
                     @Override
+                    public void open() {
+                        onItemLectureListener.open();
+                    }
+
+                    @Override
+                    public void dismiss() {
+                        onItemLectureListener.dismiss();
+                    }
+
+                    @Override
                     public void delete() {
                         dialogDelete(syncRoomBean);
                     }
                 });
-                syncRoomOperatePopup.StartPop(holder.kk);
-
+                syncRoomOperatePopup.StartPop(holder.kk, syncRoomBean);
             }
         });
     }
@@ -222,7 +238,7 @@ public class SyncRoomAdapter extends RecyclerView.Adapter<SyncRoomAdapter.Recycl
                 }
                 final SpaceDeletePopup spaceDeletePopup = new SpaceDeletePopup();
                 spaceDeletePopup.getPopwindow(context);
-                spaceDeletePopup.setSP(cuslist, syncRoomBean.getParentID());
+                spaceDeletePopup.setSP(cuslist);
                 spaceDeletePopup.ChangeMove(new TeamSpaceBeanFile());
                 spaceDeletePopup.ChangeMove2();
                 spaceDeletePopup.setFavoritePoPListener(new SpaceDeletePopup.FavoritePoPListener() {
@@ -238,7 +254,6 @@ public class SyncRoomAdapter extends RecyclerView.Adapter<SyncRoomAdapter.Recycl
 
                     @Override
                     public void delete(int spaceid) {
-
                         TeamSpaceInterfaceTools.getinstance().switchSpace(AppConfig.URL_PUBLIC + "SyncRoom/SwitchSpace?syncRoomID=" + syncRoomBean.getItemID() + "&spaceID=" + spaceid,
                                 TeamSpaceInterfaceTools.SWITCHSPACE, new TeamSpaceInterfaceListener() {
                                     @Override
@@ -270,16 +285,17 @@ public class SyncRoomAdapter extends RecyclerView.Adapter<SyncRoomAdapter.Recycl
     class RecycleHolder extends RecyclerView.ViewHolder {
 
         TextView title;
-        TextView tv1,membercount,documentcount,meetingcount;
+        TextView membercount, documentcount, meetingcount;
         LinearLayout kk;
+        ImageView moreOpation;
 
         public RecycleHolder(View itemView) {
             super(itemView);
             title = (TextView) itemView.findViewById(R.id.title);
-            tv1 = (TextView) itemView.findViewById(R.id.tv1);
             membercount = (TextView) itemView.findViewById(R.id.membercount);
             documentcount = (TextView) itemView.findViewById(R.id.documentcount);
             meetingcount = (TextView) itemView.findViewById(R.id.meetingcount);
+            moreOpation = (ImageView) itemView.findViewById(R.id.moreOpation);
             kk = (LinearLayout) itemView.findViewById(R.id.kk);
         }
     }

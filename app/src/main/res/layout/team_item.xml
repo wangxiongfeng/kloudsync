@@ -11,22 +11,20 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp">
 
-        <TextView
-            android:id="@+id/tv_sort"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_centerVertical="true"
-            android:gravity="center"
-            android:text="D"
-            android:textColor="@color/white"
-            android:background="@drawable/circle_expand"/>
+            android:scaleType="fitXY"
+            android:src="@drawable/avtar_6" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@id/tv_sort"
+            android:layout_toRightOf="@id/icon"
             android:orientation="vertical">
 
             <TextView
@@ -37,6 +35,14 @@
                 android:textColor="@color/black"
                 android:textSize="14sp" />
 
+            <TextView
+                android:id="@+id/spacecount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Spaces"
+                android:textColor="@color/black"
+                android:textSize="12sp" />
+
         </LinearLayout>
 
         <ImageView
@@ -45,7 +51,8 @@
             android:layout_height="15dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/dui"
+            android:layout_marginRight="2dp"
+            android:src="@drawable/check"
             android:visibility="gone" />
 
         <TextView

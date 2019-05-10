@@ -2,9 +2,11 @@ package com.kloudsync.techexcel.help;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -12,7 +14,6 @@ import android.widget.TextView;
 import com.kloudsync.techexcel.R;
 import com.kloudsync.techexcel.adapter.DeleteSpaceAdapter;
 import com.kloudsync.techexcel.info.Customer;
-import com.kloudsync.techexcel.info.Space;
 
 import java.util.ArrayList;
 
@@ -25,7 +26,6 @@ public class DialogTSDelete {
     private TextView tv_cancel;
 
     private ArrayList<Customer> cuslist = new ArrayList<Customer>();
-    private ArrayList<Space> slist = new ArrayList<Space>();
     private DeleteSpaceAdapter dAdapter;
 
     int type;//0:team 1:space
@@ -36,7 +36,7 @@ public class DialogTSDelete {
     private static DialogDismissListener dialogdismissListener;
 
     public interface DialogDismissListener {
-        void PopSelect(Space sp, int type);
+        void PopSelect(Customer cus);
     }
 
     public void setPoPDismissListener(
@@ -60,11 +60,16 @@ public class DialogTSDelete {
         window = dlgGetWindow.getWindow();
         window.setWindowAnimations(R.style.PopupAnimation3);
         window.setContentView(R.layout.dialog_tsd);
+        window.setBackgroundDrawable(new ColorDrawable(mContext.getResources().getColor(R.color.white)));
+        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+
 
 
         WindowManager.LayoutParams layoutParams = dlgGetWindow.getWindow()
                 .getAttributes();
 //        layoutParams.width = width / 2;
+        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+        layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
         dlgGetWindow.getWindow().setAttributes(layoutParams);
 
         ShowTSInfo();
@@ -73,29 +78,15 @@ public class DialogTSDelete {
     private void ShowTSInfo() {
         rv_sp = (RecyclerView) window.findViewById(R.id.rv_sp);
         tv_cancel = (TextView) window.findViewById(R.id.tv_cancel);
-        slist = new ArrayList<Space>();
-        if (0 == type) {
-            for (int i = 0; i < cuslist.size(); i++) {
-                Space sp = cuslist.get(i).getSpace();
-                slist.add(sp);
-            }
-        } else if (1 == type) {
-            for (int i = 0; i < cuslist.size(); i++) {
-                Customer cus = cuslist.get(i);
-                if (cus.getSpace().getItemID() == spaceid) {
-                    slist = cus.getSpaceList();
-                }
-            }
-        }
 
         LinearLayoutManager manager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
         rv_sp.setLayoutManager(manager);
-        dAdapter = new DeleteSpaceAdapter(slist);
+        dAdapter = new DeleteSpaceAdapter(cuslist);
         dAdapter.setOnItemClickListener(new DeleteSpaceAdapter.OnRecyclerViewItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                Space sp = slist.get(position);
-                dialogdismissListener.PopSelect(sp, type);
+                Customer cus = cuslist.get(position);
+                dialogdismissListener.PopSelect(cus);
                 dlgGetWindow.dismiss();
             }
         });

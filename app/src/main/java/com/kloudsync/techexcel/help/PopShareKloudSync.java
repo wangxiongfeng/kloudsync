@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.Handler;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.util.LruCache;
 import android.util.Log;
 import android.view.Gravity;
@@ -16,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.OvershootInterpolator;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Toast;
@@ -151,10 +148,12 @@ public class PopShareKloudSync {
     private void EnterAnim() {
         for (int i = 0; i < lin_all.size(); i++) {
             final LinearLayout lin = lin_all.get(i);
+            lin.setAlpha(0F);
+            lin.setVisibility(View.VISIBLE);
             ObjectAnimator animator1 = ObjectAnimator.ofFloat(lin,
-                    "translationY", 300, 0F);
+                    "translationY", 360, 0F);
             ObjectAnimator animator2 = ObjectAnimator.ofFloat(lin,
-                    "alpha", 0.3F, 1F);
+                    "alpha", 0.0F, 1F);
             AnimatorSet set = new AnimatorSet();
             set.play(animator1).with(animator2);
             set.setDuration(300);
@@ -167,12 +166,6 @@ public class PopShareKloudSync {
                 }
             });
             set.start();
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    lin.setVisibility(View.VISIBLE);
-                }
-            }, (i + 1) * 100 + 50);
         }
     }
 
@@ -189,11 +182,12 @@ public class PopShareKloudSync {
                     break;
                 case R.id.lin_wechat:
                     popShareKloudSyncDismissListener.Wechat();
-                    GetUrl(lesson, Syncid);
+                    GetUrl(lesson, Syncid, true);
                     mPopupWindow.dismiss();
                     break;
                 case R.id.lin_moment:
                     popShareKloudSyncDismissListener.Moment();
+                    GetUrl(lesson, Syncid, false);
                     mPopupWindow.dismiss();
                     break;
                 case R.id.lin_Scan:
@@ -236,7 +230,7 @@ public class PopShareKloudSync {
         Toast.makeText(mContext, "Copy link success!", Toast.LENGTH_LONG).show();
     }
 
-    private void GetUrl(final TeamSpaceBeanFile lesson, final int id) {
+    private void GetUrl(final TeamSpaceBeanFile lesson, final int id, final boolean st) {
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
         final LruCache<String, Bitmap> lruCache = new LruCache<String, Bitmap>(
                 20);
@@ -268,7 +262,7 @@ public class PopShareKloudSync {
             public void onErrorResponse(VolleyError error) {
                 // TODO Auto-generated method stub
                 Log.e("error", error + "");
-                weixinshare(lesson, null, id);
+                weixinshare(lesson, null, id, st);
 
             }
 
@@ -278,14 +272,21 @@ public class PopShareKloudSync {
                 if (response.getBitmap() != null) {
 //                    long s2 = System.currentTimeMillis();
 //                    Log.e("duang", response.getBitmap().getByteCount() + " : " + s1 + " : " + s2 + "  :   " + (s2 - s1));
-                    weixinshare(lesson, response.getBitmap(), id);
+                    weixinshare(lesson, response.getBitmap(), id, st);
                 }
             }
 
         });
     }
 
-    private void weixinshare(TeamSpaceBeanFile lesson, Bitmap b, int id) {
+    /**
+     * 分享到微信
+     * @param lesson
+     * @param b
+     * @param id
+     * @param st true：对话 false:朋友圈
+     */
+    private void weixinshare(TeamSpaceBeanFile lesson, Bitmap b, int id, boolean st) {
         String url = AppConfig.SHARE_DOCUMENT + lesson.getItemID();
         if (id > 0) {
             url = AppConfig.SHARE_SYNC + id;
@@ -312,7 +313,7 @@ public class PopShareKloudSync {
             req.transaction = buildTransaction("webpage");
 
             req.message = msg;
-            req.scene = SendMessageToWX.Req.WXSceneSession;
+            req.scene = st ? SendMessageToWX.Req.WXSceneSession : SendMessageToWX.Req.WXSceneTimeline;
             WeiXinApi.getInstance().GetApi().sendReq(req);
         } else {
             Toast.makeText(mContext, "微信客户端未安装，请确认",

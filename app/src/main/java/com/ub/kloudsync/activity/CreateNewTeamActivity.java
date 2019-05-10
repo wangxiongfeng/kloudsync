@@ -29,7 +29,6 @@ public class CreateNewTeamActivity extends Activity implements View.OnClickListe
     private ImageView back;
     private EditText inputname;
     private TextView createbtn;
-    private int teamid = 0;
     private TextView tv_title;
     private RelativeLayout selectteamctype;
     private TextView teamtypecontent;
@@ -61,7 +60,6 @@ public class CreateNewTeamActivity extends Activity implements View.OnClickListe
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.createnewteam);
-        teamid = getIntent().getIntExtra("ItemID", 0);
         isSync = getIntent().getBooleanExtra("isSync", false);
         initView();
     }
@@ -76,15 +74,9 @@ public class CreateNewTeamActivity extends Activity implements View.OnClickListe
         teamtypecontent = (TextView) findViewById(R.id.teamtypecontent);
         selectteamctype = (RelativeLayout) findViewById(R.id.selectteamctype);
         selectteamctype.setOnClickListener(this);
-        if (teamid == 0) {
-            tv_title.setText(getResources().getString(R.string.Create_team));
-            createbtn.setText(getResources().getString(R.string.Create_team));
-            selectteamctype.setVisibility(View.VISIBLE);
-        } else {
-            tv_title.setText(getResources().getString(R.string.Create_Space));
-            createbtn.setText(getResources().getString(R.string.Create_Space));
-            selectteamctype.setVisibility(View.GONE);
-        }
+        tv_title.setText(getResources().getString(R.string.Create_team));
+        createbtn.setText(getResources().getString(R.string.Create_team));
+        selectteamctype.setVisibility(View.VISIBLE);
         if(isSync){
             teamSpaceBean = new TeamSpaceBean();
             teamtypecontent.setText("I don't link to document team");
@@ -142,30 +134,18 @@ public class CreateNewTeamActivity extends Activity implements View.OnClickListe
         if(isSync){
             CreateTeamTopic();
         }else {
-            if (teamid == 0) {
-                if (teamType == 0) {
-                    Toast.makeText(this, "Please select Team Type", Toast.LENGTH_LONG).show();
-                    return;
-                }
-                TeamSpaceInterfaceTools.getinstance().createTeamSpace(AppConfig.URL_PUBLIC + "TeamSpace/CreateTeamSpace", TeamSpaceInterfaceTools.CREATETEAMSPACE,
-                        AppConfig.SchoolID, 1, inputname.getText().toString(), 0, teamType, new TeamSpaceInterfaceListener() {
-                            @Override
-                            public void getServiceReturnData(Object object) {
-                                finish();
-                            }
-                        }
-                );
-            } else {
-                TeamSpaceInterfaceTools.getinstance().createTeamSpace(AppConfig.URL_PUBLIC + "TeamSpace/CreateTeamSpace", TeamSpaceInterfaceTools.CREATETEAMSPACE,
-                        AppConfig.SchoolID, 2, inputname.getText().toString(), teamid, 0, new TeamSpaceInterfaceListener() {
-                            @Override
-                            public void getServiceReturnData(Object object) {
-                                EventBus.getDefault().post(new TeamSpaceBean());
-                                finish();
-                            }
-                        }
-                );
+            if (teamType == 0) {
+                Toast.makeText(this, "Please select Team Type", Toast.LENGTH_LONG).show();
+                return;
             }
+            TeamSpaceInterfaceTools.getinstance().createTeamSpace(AppConfig.URL_PUBLIC + "TeamSpace/CreateTeamSpace", TeamSpaceInterfaceTools.CREATETEAMSPACE,
+                    AppConfig.SchoolID, 1, inputname.getText().toString(), 0, teamType, new TeamSpaceInterfaceListener() {
+                        @Override
+                        public void getServiceReturnData(Object object) {
+                            finish();
+                        }
+                    }
+            );
         }
     }
     private void CreateTeamTopic() {

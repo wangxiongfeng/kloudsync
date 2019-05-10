@@ -7,12 +7,39 @@ public class Space implements Serializable {
     private int type;
     private int parentID;
     private int companyID;
+    private int AttachmentCount;
+    private int MemberCount;
+    private int SyncRoomCount;
     private String name;
     private String CreatedDate;
     private String CreatedByName;
     private boolean expand;
 
     public Space() {
+    }
+
+    public int getAttachmentCount() {
+        return AttachmentCount;
+    }
+
+    public void setAttachmentCount(int attachmentCount) {
+        AttachmentCount = attachmentCount;
+    }
+
+    public int getMemberCount() {
+        return MemberCount;
+    }
+
+    public void setMemberCount(int memberCount) {
+        MemberCount = memberCount;
+    }
+
+    public int getSyncRoomCount() {
+        return SyncRoomCount;
+    }
+
+    public void setSyncRoomCount(int syncRoomCount) {
+        SyncRoomCount = syncRoomCount;
     }
 
     public int getItemID() {

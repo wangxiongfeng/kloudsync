@@ -4,9 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -23,13 +19,11 @@ import android.widget.Toast;
 import com.kloudsync.techexcel.R;
 import com.kloudsync.techexcel.adapter.GroupAdapter;
 import com.kloudsync.techexcel.config.AppConfig;
-import com.kloudsync.techexcel.dialog.AddGroupActivity;
 import com.kloudsync.techexcel.info.Customer;
 import com.kloudsync.techexcel.start.LoginGet;
 import com.ub.kloudsync.activity.TeamSpaceBean;
 import com.ub.kloudsync.activity.TeamSpaceInterfaceListener;
 import com.ub.kloudsync.activity.TeamSpaceInterfaceTools;
-import com.ub.techexcel.adapter.SyncRoomAdapter;
 import com.ub.techexcel.bean.SyncRoomBean;
 
 import java.util.ArrayList;
@@ -144,11 +138,14 @@ public class CreateSyncRoomPopup implements View.OnClickListener {
 
     private View view2;
     private String attachmentid2;
+    int spaceid;
 
     @SuppressLint("NewApi")
-    public void StartPop(View v, TeamSpaceBean teamSpaceBean, String attachmentid) {
+    public void StartPop(View v, TeamSpaceBean teamSpaceBean, int spaceid, String attachmentid) {
         view2 = v;
         attachmentid2 = attachmentid;
+        this.spaceid = spaceid;
+
         if (mPopupWindow != null) {
             if (teamSpaceBean != null) {
                 teamSpaceBean2 = teamSpaceBean;
@@ -203,12 +200,12 @@ public class CreateSyncRoomPopup implements View.OnClickListener {
             return;
         }
         TeamSpaceInterfaceTools.getinstance().createSyncRoom(AppConfig.URL_PUBLIC + "SyncRoom/CreateSyncRoom",
-                TeamSpaceInterfaceTools.CREATESYNCROOM, AppConfig.SchoolID, teamSpaceBean2.getItemID(),0, inputsyncroomname.getText().toString(),
+                TeamSpaceInterfaceTools.CREATESYNCROOM, AppConfig.SchoolID, teamSpaceBean2.getItemID(), spaceid, inputsyncroomname.getText().toString(),
                 attachmentid2, "", mlist, new TeamSpaceInterfaceListener() {
                     @Override
                     public void getServiceReturnData(Object object) {
                         final int syncroomId = (int) object;
-                        TeamSpaceInterfaceTools.getinstance().getSyncRoomList(AppConfig.URL_PUBLIC + "SyncRoom/List?companyID=" + AppConfig.SchoolID + "&teamID=" + teamSpaceBean2.getItemID(),
+                        TeamSpaceInterfaceTools.getinstance().getSyncRoomList(AppConfig.URL_PUBLIC + "SyncRoom/List?companyID=" + AppConfig.SchoolID + "&teamID=" + teamSpaceBean2.getItemID() + "&spaceID=" + spaceid,
                                 TeamSpaceInterfaceTools.GETSYNCROOMLIST, new TeamSpaceInterfaceListener() {
                                     @Override
                                     public void getServiceReturnData(Object object) {

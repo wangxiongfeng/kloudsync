@@ -409,7 +409,7 @@
                 android:layout_centerVertical="true"
                 android:layout_gravity="center"
                 android:layout_marginLeft="30dp"
-                android:text="Scan TV APP"
+                android:text="Scan a TV"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
 
@@ -439,7 +439,7 @@
                 android:layout_centerVertical="true"
                 android:layout_gravity="center"
                 android:layout_marginLeft="30dp"
-                android:text="Start new meeting"
+                android:text="Start meeting"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
 

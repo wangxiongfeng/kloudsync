@@ -3,6 +3,7 @@ package com.ub.techexcel.tools;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.os.Message;
@@ -40,6 +41,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
+
 /**
  * Created by wang on 2017/9/18.
  */
@@ -50,7 +53,6 @@ public class SyncRoomAddMeetingPopup implements View.OnClickListener {
     public int width;
     public PopupWindow mPopupWindow;
     private View view;
-
     private ImageView cancel;
     private TextView submit;
     private EditText meetingname;
@@ -187,7 +189,6 @@ public class SyncRoomAddMeetingPopup implements View.OnClickListener {
                     }
                 });
                 inviteOthersPopup.StartPop(outView);
-
                 break;
             case R.id.submit:
                 submit();

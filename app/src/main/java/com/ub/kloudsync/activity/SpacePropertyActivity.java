@@ -9,7 +9,6 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,17 +18,11 @@ import com.kloudsync.techexcel.R;
 import com.kloudsync.techexcel.adapter.SpacePropertyAdapter;
 import com.kloudsync.techexcel.config.AppConfig;
 import com.kloudsync.techexcel.docment.InviteNewActivity;
-import com.kloudsync.techexcel.docment.RenameActivity;
 import com.kloudsync.techexcel.info.Customer;
-import com.kloudsync.techexcel.info.Space;
-import com.kloudsync.techexcel.service.ConnectService;
-import com.kloudsync.techexcel.start.LoginGet;
-import com.kloudsync.techexcel.tool.NetWorkHelp;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +36,6 @@ public class SpacePropertyActivity extends Activity {
     private TextView tv_invite;
     private TextView tv_fs;
     private ImageView img_back;
-    private ImageView switchteam;
 
     private SpacePropertyAdapter madapter;
 
@@ -133,7 +125,6 @@ public class SpacePropertyActivity extends Activity {
         tv_invite = (TextView) findViewById(R.id.tv_invite);
         tv_fs = (TextView) findViewById(R.id.tv_fs);
         img_back = (ImageView) findViewById(R.id.img_notice);
-        switchteam = (ImageView) findViewById(R.id.switchteam);
         img_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -141,7 +132,6 @@ public class SpacePropertyActivity extends Activity {
             }
         });
         tv_invite.setOnClickListener(new myOnClick());
-        switchteam.setOnClickListener(new myOnClick());
 
     }
 
@@ -153,165 +143,12 @@ public class SpacePropertyActivity extends Activity {
                 case R.id.tv_invite:
                     GoToInvite();
                     break;
-                case R.id.switchteam:
-                    ShowMorePop();
-                    break;
                 default:
                     break;
             }
         }
     }
-
-    private void ShowMorePop() {
-        TeamMorePopup teamMorePopup = new TeamMorePopup();
-        teamMorePopup.setIsTeam(false);
-        teamMorePopup.getPopwindow(this);
-        teamMorePopup.setFavoritePoPListener(new TeamMorePopup.FavoritePoPListener() {
-            @Override
-            public void dismiss() {
-                getWindow().getDecorView().setAlpha(1.0f);
-            }
-
-            @Override
-            public void open() {
-                getWindow().getDecorView().setAlpha(0.5f);
-            }
-
-            @Override
-            public void delete() {
-                DeleteSpace();
-            }
-
-            @Override
-            public void rename() {
-                Intent intent = new Intent(SpacePropertyActivity.this, RenameActivity.class);
-                intent.putExtra("itemID", itemID);
-                intent.putExtra("isteam", false);
-                startActivity(intent);
-            }
-
-            @Override
-            public void quit() {
-
-            }
-
-            @Override
-            public void edit() {
-
-            }
-        });
-
-        teamMorePopup.StartPop(switchteam);
-    }
-
-    private void DeleteSpace() {
-        LoginGet lg = new LoginGet();
-        lg.setBeforeDeleteSpaceListener(new LoginGet.BeforeDeleteSpaceListener() {
-            @Override
-            public void getBDS(int retdata) {
-                if (0 == retdata) {
-                    MergeSpace(retdata);
-                } else {
-                    GetDeletePop();
-                }
-            }
-        });
-        lg.GetBeforeDeleteSpace(this, itemID + "");
-    }
-
-    private ArrayList<Customer> cuslist = new ArrayList<Customer>();
-    private void GetDeletePop() {
-        LoginGet loginget = new LoginGet();
-        loginget.setTeamSpaceGetListener(new LoginGet.TeamSpaceGetListener() {
-            @Override
-            public void getTS(ArrayList<Customer> list) {
-                cuslist = new ArrayList<Customer>();
-                cuslist.addAll(list);
-                for (int i = 0; i < cuslist.size(); i++) {
-                    Customer customer = cuslist.get(i);
-                    ArrayList<Space> sl = customer.getSpaceList();
-                    for (int j = 0; j < sl.size(); j++) {
-                        Space sp = sl.get(j);
-                        if(sp.getItemID() == itemID){
-                            sl.remove(j);
-                            break;
-                        }
-                    }
-                }
-
-                SpaceDeletePopup spaceDeletePopup = new SpaceDeletePopup();
-                spaceDeletePopup.getPopwindow(SpacePropertyActivity.this);
-                spaceDeletePopup.setSP(cuslist, itemID);
-                spaceDeletePopup.setFavoritePoPListener(new SpaceDeletePopup.FavoritePoPListener() {
-                    @Override
-                    public void dismiss() {
-                        getWindow().getDecorView().setAlpha(1.0f);
-                    }
-
-                    @Override
-                    public void open() {
-                        getWindow().getDecorView().setAlpha(0.5f);
-                    }
-
-                    @Override
-                    public void delete(int spaceid) {
-                        MergeSpace(spaceid);
-                    }
-
-                    @Override
-                    public void refresh() {
-
-                    }
-                });
-                spaceDeletePopup.StartPop(mTeamRecyclerView);
-
-            }
-        });
-        loginget.GetTeamSpace(this);
-    }
-
-    private void MergeSpace(int retdata) {
-        int mergeSpaceID = retdata;
-        if (0 == mergeSpaceID) {
-            mergeSpaceID = 9999;
-        }
-        final int finalMergeSpaceID = mergeSpaceID;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Message msg = new Message();
-                try {
-                    JSONObject responsedata = ConnectService.getIncidentDataattachment(
-                            AppConfig.URL_PUBLIC +
-                                    "TeamSpace/DeleteSpace?spaceID=" +
-                                    itemID + "&mergeSpaceID=" +
-                                    finalMergeSpaceID
-                    );
-                    Log.e("DeleteSpace", responsedata.toString());
-                    int retcode = (Integer) responsedata.get("RetCode");
-                    msg = new Message();
-                    if (0 == retcode) {
-                        msg.what = AppConfig.DELETESUCCESS;
-                        String result = responsedata.toString();
-                        msg.obj = result;
-                    } else {
-                        msg.what = AppConfig.FAILED;
-                        String ErrorMessage = responsedata.getString("errorMessage");
-                        msg.obj = ErrorMessage;
-                    }
-                } catch (Exception e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                    msg.what = AppConfig.NETERROR;
-                } finally {
-                    if (!NetWorkHelp.checkNetWorkStatus(getApplicationContext())) {
-                        msg.what = AppConfig.NO_NETWORK;
-                    }
-                    handler.sendMessage(msg);
-                }
-            }
-        }).start();
-    }
+    
 
     private void GoToInvite() {
         Intent intent = new Intent(this, InviteNewActivity.class);

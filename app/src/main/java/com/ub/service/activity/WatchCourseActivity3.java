@@ -23,7 +23,6 @@ import android.hardware.Camera;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -152,7 +151,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
@@ -175,17 +173,11 @@ import io.agora.rtc.Constants;
 import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcEngine;
 import io.agora.rtc.video.VideoCanvas;
-import io.rong.imageloader.utils.L;
 import io.rong.imkit.RongIM;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.Conversation;
 import io.rong.imlib.model.MessageContent;
 import io.rong.message.TextMessage;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 /**
  * Created by wang on 2017/6/16.
@@ -2379,7 +2371,6 @@ public class WatchCourseActivity3 extends BaseActivity implements View.OnClickLi
                 public void onPrepared(MediaPlayer mp) {
                     Log.e("GetMediaPlay", "ffffffffff");
                     mp.start();
-
                     doLeaveChannel();
                     mUidsList.clear();
                     mLeftAgoraAdapter.setData(null, "");
@@ -2493,7 +2484,6 @@ public class WatchCourseActivity3 extends BaseActivity implements View.OnClickLi
             mSeekBar.setVisibility(View.VISIBLE);
             int ss = Integer.parseInt(duration + "");
             mSeekBar.setMax(ss);
-
         } else {
             mSeekBar.setVisibility(View.GONE);
         }
@@ -2679,6 +2669,7 @@ public class WatchCourseActivity3 extends BaseActivity implements View.OnClickLi
             }
         }
         refreshTime(duration, isrecording);
+
         audiosyncll.setVisibility(View.VISIBLE);
 
 
@@ -4750,7 +4741,7 @@ public class WatchCourseActivity3 extends BaseActivity implements View.OnClickLi
         syncRoomPopup.setWebCamPopupListener(new SyncRoomPopup.WebCamPopupListener() {
 
             @Override
-            public void changeOptions(SyncRoomBean syncRoomBean, final TeamSpaceBean teamSpaceBean) {
+            public void changeOptions(SyncRoomBean syncRoomBean, TeamSpaceBean teamSpaceBean, int spaceid) {
                 if (syncRoomBean.getItemID() == -1) {
                     CreateSyncRoomPopup createSyncRoomPopup = new CreateSyncRoomPopup();
                     createSyncRoomPopup.getPopwindow(WatchCourseActivity3.this);
@@ -4761,7 +4752,7 @@ public class WatchCourseActivity3 extends BaseActivity implements View.OnClickLi
                         }
                     });
                     String attachmentid = meetingId.substring(0, meetingId.lastIndexOf(","));
-                    createSyncRoomPopup.StartPop(wv_show, teamSpaceBean, attachmentid);
+                    createSyncRoomPopup.StartPop(wv_show, teamSpaceBean,spaceid, attachmentid);
                 } else {
                     enterSyncroom(syncRoomBean);
                 }
@@ -4785,9 +4776,7 @@ public class WatchCourseActivity3 extends BaseActivity implements View.OnClickLi
 
     private void enterSyncroom(SyncRoomBean syncRoomBean) {
 
-        Toast.makeText(WatchCourseActivity3.this,syncRoomBean.getName(),Toast.LENGTH_LONG).show();
-
-
+        Toast.makeText(WatchCourseActivity3.this, syncRoomBean.getName(), Toast.LENGTH_LONG).show();
 
 
     }
@@ -4847,7 +4836,9 @@ public class WatchCourseActivity3 extends BaseActivity implements View.OnClickLi
                 favoriteAudio = soundtrackBean.getBackgroudMusicInfo();
                 getAudioAction(soundtrackBean.getSoundtrackID());
                 String duration = soundtrackBean.getDuration();
+
                 openAudioSync(false, true, TextUtils.isEmpty(duration) ? 0 : Long.parseLong(duration));
+
                 if (favoriteAudio == null || favoriteAudio.getAttachmentID() == 0) {
                     GetMediaPlay("", false);
                     sendAudioSocket(1, soundtrackID);
@@ -6261,7 +6252,8 @@ public class WatchCourseActivity3 extends BaseActivity implements View.OnClickLi
             params.addBodyParameter(title, file);
             String url = null;
             try {
-                url = AppConfig.URL_PUBLIC + "EventAttachment/UploadRecordedVoice4App?LessonID=" + lessonId + "&DocItemID=" + currentAttachmentId + "&AudioItemID=" + vid + "&Title=" + URLEncoder.encode(LoginGet.getBase64Password(title)) + "&Description=description";
+                url = AppConfig.URL_PUBLIC + "EventAttachment/UploadRecordedVoice4App?LessonID=" + (TextUtils.isEmpty(lessonId) ? 0 : lessonId) + "&DocItemID=" + currentAttachmentId + "&AudioItemID=" + vid +
+                        "&Title=" + URLEncoder.encode(LoginGet.getBase64Password(title)) + "&Description=description" + "&Hash=" + Md5Tool.getMd5ByFile(file);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -7813,7 +7805,7 @@ public class WatchCourseActivity3 extends BaseActivity implements View.OnClickLi
 
     @Override
     public void onJoinChannelSuccess(final String channel, final int uid, final int elapsed) {
-        Log.e("RRRRRRRRRRRRRRRRRR", "onJoinChannelSuccess    " + uid + "  " + mUidsList.size()+  "    "+channel);
+        Log.e("RRRRRRRRRRRRRRRRRR", "onJoinChannelSuccess    " + uid + "  " + mUidsList.size() + "    " + channel);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {

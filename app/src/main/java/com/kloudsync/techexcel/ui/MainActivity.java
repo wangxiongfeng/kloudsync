@@ -399,20 +399,17 @@ public class MainActivity extends FragmentActivity {
     private void GetTvShow() {
         for (int i = 0; i < tvIDs.length; i++) {
             TextView tv = (TextView) findViewById(tvIDs[i]);
-
             if (i == 0) {
                 Drawable d = getResources().getDrawable(draw_selectIDs[i]);
                 d.setBounds(0, 0, DensityUtil.dp2px(getApplicationContext(), 25), DensityUtil.dp2px(getApplicationContext(), 25)); // 必须设置图片大小，否则不显示
-                tv.setTextColor(getResources().getColor(R.color.green));
+                tv.setTextColor(getResources().getColor(R.color.skyblue));
                 tv.setCompoundDrawables(null, d, null, null);
-
             } else {
                 Drawable d = getResources().getDrawable(drawIDs[i]);
                 d.setBounds(0, 0, DensityUtil.dp2px(getApplicationContext(), 25), DensityUtil.dp2px(getApplicationContext(), 25));  // 必须设置图片大小，否则不显示
                 tv.setTextColor(getResources().getColor(R.color.darkgrey));
                 tv.setCompoundDrawables(null, d, null, null);
             }
-
             tv.setOnClickListener(new myOnClick());
             tvs.add(tv);
         }
@@ -612,7 +609,7 @@ public class MainActivity extends FragmentActivity {
             if (i == s) {
                 Drawable d = getResources().getDrawable(draw_selectIDs[s]);
                 d.setBounds(0, 0, DensityUtil.dp2px(getApplicationContext(), 25), DensityUtil.dp2px(getApplicationContext(), 25)); // 必须设置图片大小，否则不显示
-                tvs.get(s).setTextColor(getResources().getColor(R.color.green));
+                tvs.get(s).setTextColor(getResources().getColor(R.color.skyblue));
                 tvs.get(s).setCompoundDrawables(null, d, null, null);
             } else {
                 Drawable d = getResources().getDrawable(drawIDs[i]);

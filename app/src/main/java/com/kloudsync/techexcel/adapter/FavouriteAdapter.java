@@ -1,5 +1,7 @@
 package com.kloudsync.techexcel.adapter;
 
+import android.app.Activity;
+import android.content.Context;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -25,6 +27,7 @@ import com.ub.techexcel.tools.ServiceInterfaceListener;
 import com.ub.techexcel.tools.ServiceInterfaceTools;
 import com.ub.techexcel.tools.Tools;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +39,7 @@ public class FavouriteAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
 
     private List<Favorite> mlist = new ArrayList<>();
+    private Context context;
 
     private DeleteItemClickListener deleteItemClickListener = null;
 
@@ -90,6 +94,11 @@ public class FavouriteAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public FavouriteAdapter(List<Favorite> mlist) {
         this.mlist = mlist;
+    }
+
+    public FavouriteAdapter(Context context, List<Favorite> mlist) {
+        this.mlist = mlist;
+        this.context = context;
     }
 
     public void UpdateRV(List<Favorite> mlist) {
@@ -173,14 +182,17 @@ public class FavouriteAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         if (favorite.isExpand()) {
             for (int i = 0; i < favorite.getSlist().size(); i++) {
                 final SoundtrackBean soundtrackBean = favorite.getSlist().get(i);
-                RelativeLayout view = (RelativeLayout) LayoutInflater.from(holder.itemView.getContext()).inflate(R.layout.yinxiang_item, null);
+                LinearLayout view = (LinearLayout) LayoutInflater.from(holder.itemView.getContext()).inflate(R.layout.yinxiang_item3, null);
                 final TextView title = (TextView) view.findViewById(R.id.title);
                 TextView username = (TextView) view.findViewById(R.id.username);
                 TextView duration = (TextView) view.findViewById(R.id.duration);
-                final RelativeLayout operation = (RelativeLayout) view.findViewById(R.id.operation);
+                TextView createData = (TextView) view.findViewById(R.id.createdate);
+                String create = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(Long.parseLong(soundtrackBean.getCreatedDate()));
+                createData.setText("" + create);
+                final ImageView operation = (ImageView) view.findViewById(R.id.morepopup);
                 SimpleDraweeView image = (SimpleDraweeView) view.findViewById(R.id.image);
-                LinearLayout ll = (LinearLayout) view.findViewById(R.id.ll);
-                ll.setVisibility(View.GONE);
+              /*  LinearLayout ll = (LinearLayout) view.findViewById(R.id.ll);
+                ll.setVisibility(View.GONE);*/
                 title.setText(soundtrackBean.getTitle());
                 username.setText(soundtrackBean.getUserName());
                 duration.setText(soundtrackBean.getDuration());
@@ -207,7 +219,8 @@ public class FavouriteAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
                                     @Override
                                     public void dismiss() {
-
+                                        if (null != context)
+                                            ((Activity) context).getWindow().getDecorView().setAlpha(1.0f);
                                     }
 
                                     @Override
@@ -217,6 +230,8 @@ public class FavouriteAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
                                     @Override
                                     public void open() {
+                                        if (null != context)
+                                            ((Activity) context).getWindow().getDecorView().setAlpha(0.5f);
 
                                     }
                                 });
@@ -228,8 +243,22 @@ public class FavouriteAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                             public void delete() {
                                 deleteYinxiang2(soundtrackBean, favorite);
                             }
+
+                            @Override
+                            public void open() {
+                                if (null != context)
+                                    ((Activity) context).getWindow().getDecorView().setAlpha(0.5f);
+
+                            }
+
+                            @Override
+                            public void dismiss() {
+                                if (null != context)
+                                    ((Activity) context).getWindow().getDecorView().setAlpha(1.0f);
+
+                            }
                         });
-                        documentYinXiangPopup.StartPop(title);
+                        documentYinXiangPopup.StartPop(title, soundtrackBean);
                     }
                 });
                 String url2 = soundtrackBean.getAvatarUrl();

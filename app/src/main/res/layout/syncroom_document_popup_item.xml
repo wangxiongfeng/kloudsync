@@ -1,19 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll"
     android:layout_width="350dp"
     android:layout_height="100dp"
-    android:id="@+id/ll"
     android:background="@color/white"
-    android:orientation="horizontal"
-    >
+    android:orientation="horizontal">
 
-    <TextView
-        android:layout_marginLeft="10dp"
-        android:id="@+id/fileicon"
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/img_url"
         android:layout_width="100dp"
         android:layout_height="70dp"
         android:layout_gravity="center_vertical"
-        android:background="@color/skyblue" />
+        android:layout_marginLeft="10dp"
+        android:scaleType="fitXY"
+        fresco:fadeDuration="500"
+
+        fresco:failureImage="@drawable/placeholderimg"
+        fresco:failureImageScaleType="centerInside"
+
+        fresco:placeholderImage="@drawable/placeholderimg"
+        fresco:placeholderImageScaleType="fitCenter"
+
+        />
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,11 +42,12 @@
             android:textSize="14sp" />
 
         <TextView
+            android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
-            android:text="1 minutes updated..."
+            android:text="Create Date:"
             android:textSize="12sp" />
 
         <RelativeLayout
@@ -58,11 +70,11 @@
                 android:textSize="12sp" />
 
             <ImageView
-                android:layout_marginLeft="170dp"
                 android:id="@+id/more"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
                 android:layout_centerVertical="true"
+                android:layout_marginLeft="170dp"
                 android:src="@drawable/moreheng" />
         </RelativeLayout>
 

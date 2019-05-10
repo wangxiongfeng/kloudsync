@@ -19,8 +19,10 @@ import android.widget.Toast;
 
 import com.kloudsync.techexcel.R;
 import com.kloudsync.techexcel.config.AppConfig;
+import com.kloudsync.techexcel.docment.RenameActivity;
 import com.kloudsync.techexcel.help.DialogAddFavorite;
 import com.kloudsync.techexcel.help.DialogDeleteDocument;
+import com.kloudsync.techexcel.help.DialogRename;
 import com.kloudsync.techexcel.help.PopAlbums;
 import com.kloudsync.techexcel.help.PopDocument;
 import com.kloudsync.techexcel.help.PopEditDocument;
@@ -64,11 +66,13 @@ public class SpaceDocumentsActivity extends Activity implements View.OnClickList
     private RecyclerView mTeamRecyclerView;
     private int itemID;
     private TextView teamspacename;
-    private TextView tv_fs;
+    //    private TextView tv_fs;
     private ImageView img_back;
     private ImageView adddocument;
+    private ImageView switchteam;
     private RelativeLayout teamRl;
     private TeamSpaceDocumentAdapter teamSpaceDocumentAdapter;
+    private TeamSpaceBean selectSpace;
 
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
@@ -84,6 +88,10 @@ public class SpaceDocumentsActivity extends Activity implements View.OnClickList
                 case AppConfig.DELETESUCCESS:
                     getTeamItem();
                     EventBus.getDefault().post(new TeamSpaceBean());
+                    break;
+                case AppConfig.SUCCESS:
+                    EventBus.getDefault().post(new TeamSpaceBean());
+                    finish();
                     break;
                 case AppConfig.AddTempLesson:
                     result = (String) msg.obj;
@@ -105,7 +113,7 @@ public class SpaceDocumentsActivity extends Activity implements View.OnClickList
         intent.putExtra("isTeamspace", true);
         intent.putExtra("yinxiangmode", 0);
         intent.putExtra("identity", 2);
-        intent.putExtra("lessionId",  "");
+        intent.putExtra("lessionId", "");
         intent.putExtra("isInstantMeeting", 1);
         intent.putExtra("teacherid", AppConfig.UserID.replace("-", ""));
         intent.putExtra("isStartCourse", true);
@@ -129,7 +137,7 @@ public class SpaceDocumentsActivity extends Activity implements View.OnClickList
 //        intent.putExtra("yinxiangmode", 0);
 
         intent.putExtra("identity", 2);
-        intent.putExtra("lessionId",  "");
+        intent.putExtra("lessionId", "");
         intent.putExtra("isInstantMeeting", 1);
         intent.putExtra("teacherid", AppConfig.UserID.replace("-", ""));
         intent.putExtra("isStartCourse", true);
@@ -201,12 +209,14 @@ public class SpaceDocumentsActivity extends Activity implements View.OnClickList
         mTeamRecyclerView = (RecyclerView) findViewById(R.id.recycleview);
         mTeamRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         teamspacename = (TextView) findViewById(R.id.teamspacename);
-        tv_fs = (TextView) findViewById(R.id.tv_fs);
+//        tv_fs = (TextView) findViewById(R.id.tv_fs);
         img_back = (ImageView) findViewById(R.id.img_notice);
         adddocument = (ImageView) findViewById(R.id.adddocument);
+        switchteam = (ImageView) findViewById(R.id.switchteam);
         teamRl = (RelativeLayout) findViewById(R.id.teamrl);
         teamRl.setOnClickListener(this);
         adddocument.setOnClickListener(this);
+        switchteam.setOnClickListener(this);
         img_back.setOnClickListener(this);
     }
 
@@ -218,11 +228,11 @@ public class SpaceDocumentsActivity extends Activity implements View.OnClickList
             public void getServiceReturnData(Object object) {
                 TeamSpaceBean teamSpaceBean = (TeamSpaceBean) object;
                 teamspacename.setText(teamSpaceBean.getName());
-                if(teamSpaceBean.getName().length() > 0) {
+                /*if(teamSpaceBean.getName().length() > 0) {
                     tv_fs.setText(teamSpaceBean.getName().substring(0, 1));
                 }else{
                     tv_fs.setText("");
-                }
+                }*/
                 getSpaceList();
             }
         });
@@ -285,6 +295,12 @@ public class SpaceDocumentsActivity extends Activity implements View.OnClickList
                             }
 
                             @Override
+                            public void onRealItem(TeamSpaceBeanFile lesson, View view) {
+                                GoToVIew(lesson);
+
+                            }
+
+                            @Override
                             public void share(int s, TeamSpaceBeanFile teamSpaceBeanFile) {
                                 ShareKloudSync(teamSpaceBeanFile, s);
 
@@ -311,6 +327,7 @@ public class SpaceDocumentsActivity extends Activity implements View.OnClickList
     }
 
     private ArrayList<Customer> cuslist = new ArrayList<Customer>();
+
     private void MoveDocument(final TeamSpaceBeanFile lesson) {
 
         LoginGet loginget = new LoginGet();
@@ -324,7 +341,7 @@ public class SpaceDocumentsActivity extends Activity implements View.OnClickList
                     ArrayList<Space> sl = customer.getSpaceList();
                     for (int j = 0; j < sl.size(); j++) {
                         Space sp = sl.get(j);
-                        if(sp.getItemID() == itemID){
+                        if (sp.getItemID() == itemID) {
                             sl.remove(j);
                             break;
                         }
@@ -333,7 +350,7 @@ public class SpaceDocumentsActivity extends Activity implements View.OnClickList
 
                 SpaceDeletePopup spaceDeletePopup = new SpaceDeletePopup();
                 spaceDeletePopup.getPopwindow(SpaceDocumentsActivity.this);
-                spaceDeletePopup.setSP(cuslist, itemID);
+                spaceDeletePopup.setSP(cuslist);
                 spaceDeletePopup.ChangeMove(lesson);
                 spaceDeletePopup.setFavoritePoPListener(new SpaceDeletePopup.FavoritePoPListener() {
                     @Override
@@ -499,6 +516,7 @@ public class SpaceDocumentsActivity extends Activity implements View.OnClickList
 
 
     public static final int REQUEST_CODE_CAPTURE_ALBUM = 0;
+    public static final int REQUEST_CODE_CHANGESPACE = 1;
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -511,6 +529,17 @@ public class SpaceDocumentsActivity extends Activity implements View.OnClickList
             attachmentBean.setUrl(path);
             attachmentBean.setFileName(pathname);
             UploadFileWithHash(attachmentBean);
+        }
+        if (requestCode == REQUEST_CODE_CHANGESPACE) {
+            if (resultCode == RESULT_OK) {
+                selectSpace = (TeamSpaceBean) data.getSerializableExtra("selectSpace");
+                if (itemID != selectSpace.getItemID()) {
+                    itemID = selectSpace.getItemID();
+                    getTeamItem();
+
+                }
+            }
+
         }
     }
 
@@ -667,10 +696,11 @@ public class SpaceDocumentsActivity extends Activity implements View.OnClickList
             case R.id.adddocument:
                 AddDocument();
                 break;
+            case R.id.switchteam:
+                ShowMorePop();
+                break;
             case R.id.teamrl:
-                Intent intent2 = new Intent(this, SpacePropertyActivity.class);
-                intent2.putExtra("ItemID", itemID);
-                startActivity(intent2);
+                GoToSwitch();
                 break;
             case R.id.img_notice:
                 finish();
@@ -678,6 +708,173 @@ public class SpaceDocumentsActivity extends Activity implements View.OnClickList
         }
 
     }
+
+    private void GoToSwitch() {
+        Intent intent = new Intent(this, SwitchSpaceActivity.class);
+        intent.putExtra("ItemID", itemID);
+        startActivityForResult(intent, REQUEST_CODE_CHANGESPACE);
+    }
+
+
+    private void ShowMorePop() {
+        TeamMorePopup teamMorePopup = new TeamMorePopup();
+        teamMorePopup.setIsTeam(false);
+        teamMorePopup.setTSid(itemID);
+        teamMorePopup.getPopwindow(this);
+        teamMorePopup.setFavoritePoPListener(new TeamMorePopup.FavoritePoPListener() {
+            @Override
+            public void dismiss() {
+                getWindow().getDecorView().setAlpha(1.0f);
+            }
+
+            @Override
+            public void open() {
+                getWindow().getDecorView().setAlpha(0.5f);
+            }
+
+            @Override
+            public void delete() {
+                DeleteSpace();
+            }
+
+            @Override
+            public void rename() {
+//                GotoRename();
+                DialogRename dr = new DialogRename();
+                dr.EditCancel(SpaceDocumentsActivity.this, itemID, false);
+            }
+
+            @Override
+            public void quit() {
+                finish();
+            }
+
+            @Override
+            public void edit() {
+                Intent intent2 = new Intent(SpaceDocumentsActivity.this, SpacePropertyActivity.class);
+                intent2.putExtra("ItemID", itemID);
+                startActivity(intent2);
+            }
+        });
+
+        teamMorePopup.StartPop(switchteam);
+    }
+
+    private void GotoRename() {
+        Intent intent = new Intent(SpaceDocumentsActivity.this, RenameActivity.class);
+        intent.putExtra("itemID", itemID);
+        intent.putExtra("isteam", false);
+        startActivity(intent);
+    }
+
+    private void DeleteSpace() {
+        LoginGet lg = new LoginGet();
+        lg.setBeforeDeleteSpaceListener(new LoginGet.BeforeDeleteSpaceListener() {
+            @Override
+            public void getBDS(int retdata) {
+                if (0 == retdata) {
+                    MergeSpace(retdata);
+                } else {
+                    GetDeletePop();
+                }
+            }
+        });
+        lg.GetBeforeDeleteSpace(this, itemID + "");
+    }
+
+    private void GetDeletePop() {
+        LoginGet loginget = new LoginGet();
+        loginget.setTeamSpaceGetListener(new LoginGet.TeamSpaceGetListener() {
+            @Override
+            public void getTS(ArrayList<Customer> list) {
+                cuslist = new ArrayList<Customer>();
+                cuslist.addAll(list);
+                for (int i = 0; i < cuslist.size(); i++) {
+                    Customer customer = cuslist.get(i);
+                    ArrayList<Space> sl = customer.getSpaceList();
+                    for (int j = 0; j < sl.size(); j++) {
+                        Space sp = sl.get(j);
+                        if (sp.getItemID() == itemID) {
+                            sl.remove(j);
+                            break;
+                        }
+                    }
+                }
+
+                SpaceDeletePopup spaceDeletePopup = new SpaceDeletePopup();
+                spaceDeletePopup.getPopwindow(SpaceDocumentsActivity.this);
+                spaceDeletePopup.setSP(cuslist);
+                spaceDeletePopup.setFavoritePoPListener(new SpaceDeletePopup.FavoritePoPListener() {
+                    @Override
+                    public void dismiss() {
+                        getWindow().getDecorView().setAlpha(1.0f);
+                    }
+
+                    @Override
+                    public void open() {
+                        getWindow().getDecorView().setAlpha(0.5f);
+                    }
+
+                    @Override
+                    public void delete(int spaceid) {
+                        MergeSpace(spaceid);
+                    }
+
+                    @Override
+                    public void refresh() {
+
+                    }
+                });
+                spaceDeletePopup.StartPop(mTeamRecyclerView);
+
+            }
+        });
+        loginget.GetTeamSpace(this);
+    }
+
+    private void MergeSpace(int retdata) {
+        int mergeSpaceID = retdata;
+        if (0 == mergeSpaceID) {
+            mergeSpaceID = 9999;
+        }
+        final int finalMergeSpaceID = mergeSpaceID;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Message msg = new Message();
+                try {
+                    JSONObject responsedata = ConnectService.getIncidentDataattachment(
+                            AppConfig.URL_PUBLIC +
+                                    "TeamSpace/DeleteSpace?spaceID=" +
+                                    itemID + "&mergeSpaceID=" +
+                                    finalMergeSpaceID
+                    );
+                    Log.e("DeleteSpace", responsedata.toString());
+                    int retcode = (Integer) responsedata.get("RetCode");
+                    msg = new Message();
+                    if (0 == retcode) {
+                        msg.what = AppConfig.SUCCESS;
+                        String result = responsedata.toString();
+                        msg.obj = result;
+                    } else {
+                        msg.what = AppConfig.FAILED;
+                        String ErrorMessage = responsedata.getString("errorMessage");
+                        msg.obj = ErrorMessage;
+                    }
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                    msg.what = AppConfig.NETERROR;
+                } finally {
+                    if (!NetWorkHelp.checkNetWorkStatus(getApplicationContext())) {
+                        msg.what = AppConfig.NO_NETWORK;
+                    }
+                    handler.sendMessage(msg);
+                }
+            }
+        }).start();
+    }
+
 
     private void AddDocument() {
         PopAlbums pa = new PopAlbums();
@@ -752,6 +949,7 @@ public class SpaceDocumentsActivity extends Activity implements View.OnClickList
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void eventGroupInfo(TeamSpaceBean teamSpaceBean) {
         flagr = true;
+//        getTeamItem();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

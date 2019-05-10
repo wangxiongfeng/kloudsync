@@ -122,13 +122,11 @@ public class SwitchTeamActivity extends Activity implements View.OnClickListener
 
     public void getAllTeamList() {
         if (isSync) {
-
             TeamSpaceInterfaceTools.getinstance().getTopicList(AppConfig.URL_PUBLIC + "Topic/List?type=1&companyID="
                             + AppConfig.SchoolID,
                     TeamSpaceInterfaceTools.TOPICLIST, new TeamSpaceInterfaceListener() {
                         @Override
                         public void getServiceReturnData(Object object) {
-
                             sharedPreferences = getSharedPreferences(AppConfig.LOGININFO,
                                     MODE_PRIVATE);
                             int itemid = sharedPreferences.getInt("syncteamid", 0);

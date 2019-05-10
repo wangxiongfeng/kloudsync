@@ -905,7 +905,7 @@ public class LoginGet {
      */
     public void GetSpaceAttachment(Context context, int spaceID) {
         mContext = context;
-        String url =  AppConfig.URL_PUBLIC + "SpaceAttachment/List?spaceID=280&type=0&searchText=";
+        String url =  AppConfig.URL_PUBLIC + "SpaceAttachment/List?spaceID="+ spaceID +"&type=0&searchText=";
         newThreadGetResultBytoken(url, AppConfig.SpaceAttachment);
     }
 
@@ -1890,6 +1890,9 @@ public class LoginGet {
                         int Type2 = sp.getInt("Type");
                         int ParentID2 = sp.getInt("ParentID");
                         int CompanyID2 = sp.getInt("CompanyID");
+                        int AttachmentCount = sp.getInt("AttachmentCount");
+                        int MemberCount = sp.getInt("MemberCount");
+                        int SyncRoomCount = sp.getInt("SyncRoomCount");
 
                         Space space2 = new Space();
                         space2.setCompanyID(CompanyID2);
@@ -1899,6 +1902,9 @@ public class LoginGet {
                         space2.setItemID(ItemID2);
                         space2.setType(Type2);
                         space2.setParentID(ParentID2);
+                        space2.setAttachmentCount(AttachmentCount);
+                        space2.setMemberCount(MemberCount);
+                        space2.setSyncRoomCount(SyncRoomCount);
 
                         sl_list.add(space2);
                     }

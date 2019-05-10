@@ -4,57 +4,152 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical">
-    <TextView
-        android:id="@+id/tv_view"
-        android:layout_width="150dp"
-        android:layout_height="40dp"
-        android:drawableLeft="@drawable/eye_favor"
-        android:padding="10dp"
-        android:drawablePadding="5dp"
-        android:gravity="center"
-        android:textColor="@color/darkgrey"
-        android:text="@string/viewcourse"/>
-    <TextView
-        android:id="@+id/tv_share"
-        android:layout_width="150dp"
-        android:layout_height="40dp"
-        android:drawableLeft="@drawable/shareyinxiang"
-        android:padding="10dp"
-        android:drawablePadding="5dp"
-        android:gravity="center"
-        android:textColor="@color/darkgrey"
-        android:text="share"/>
-    <TextView
-        android:id="@+id/tv_move"
-        android:layout_width="150dp"
-        android:layout_height="40dp"
-        android:drawableLeft="@drawable/move"
-        android:padding="10dp"
-        android:drawablePadding="5dp"
-        android:gravity="center"
-        android:textColor="@color/darkgrey"
-        android:text="Move"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
 
-    <TextView
-        android:id="@+id/tv_edit"
-        android:layout_width="150dp"
-        android:layout_height="40dp"
-        android:drawableLeft="@drawable/editdddd"
-        android:padding="10dp"
-        android:drawablePadding="5dp"
-        android:gravity="center"
-        android:textColor="@color/darkgrey"
-        android:text="Edit"/>
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="60dp"
+            />
 
-    <TextView
-        android:id="@+id/tv_delete"
-        android:layout_width="150dp"
+        <ImageView
+            android:id="@+id/img_close"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:padding="12dp"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/close"/>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey"/>
+
+
+    <LinearLayout
+        android:id="@+id/lin_share"
+        android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:drawableLeft="@drawable/trash_favor"
-        android:padding="10dp"
-        android:drawablePadding="5dp"
-        android:gravity="center"
-        android:textColor="@color/darkgrey"
-        android:text="@string/Delete"/>
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/shareyinxiang" />
+
+        <TextView
+            android:id="@+id/tv_share"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            android:drawablePadding="5dp"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="share"
+            android:textColor="@color/darkgrey" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey"/>
+
+    <LinearLayout
+        android:id="@+id/lin_move"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/move" />
+
+        <TextView
+            android:id="@+id/tv_move"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:textSize="12sp"
+            android:drawablePadding="5dp"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="Move"
+            android:textColor="@color/darkgrey" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey"/>
+
+    <LinearLayout
+        android:id="@+id/lin_edit"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/rename" />
+
+        <TextView
+            android:id="@+id/tv_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:layout_gravity="center_vertical"
+            android:padding="10dp"
+            android:text="Rename"
+            android:textColor="@color/darkgrey" />
+    </LinearLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey"/>
+
+    <LinearLayout
+        android:id="@+id/lin_delete"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/trash_favor" />
+
+        <TextView
+            android:id="@+id/tv_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:drawablePadding="5dp"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:padding="10dp"
+            android:textSize="12sp"
+            android:text="@string/Delete"
+            android:textColor="@color/red2" />
+    </LinearLayout>
 
 </LinearLayout>

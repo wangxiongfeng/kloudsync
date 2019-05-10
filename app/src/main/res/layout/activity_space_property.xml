@@ -72,15 +72,6 @@
             android:text="Medical team of Beijing hospital"
             android:textColor="@color/black" />
 
-        <ImageView
-            android:id="@+id/switchteam"
-            android:layout_width="30dp"
-            android:padding="7dp"
-            android:layout_height="30dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/more_favor" />
-
     </RelativeLayout>
 
 

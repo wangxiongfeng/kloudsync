@@ -7,15 +7,14 @@
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="50dp"
-        android:background="@color/main_color">
-
+        android:background="@color/white">
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="@string/syncroom"
-            android:textColor="#fff"
+            android:textColor="@color/darkgrey"
             android:textSize="18sp" />
 
         <ImageView
@@ -24,13 +23,13 @@
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_marginRight="5dp"
-            android:src="@drawable/add_w" />
+            android:src="@drawable/add_w"
+            android:visibility="gone" />
 
         <RelativeLayout
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true">
-
             <ImageView
                 android:id="@+id/img_notice"
                 android:layout_width="wrap_content"
@@ -41,7 +40,6 @@
     </RelativeLayout>
 
     <include layout="@layout/searchcontact" />
-
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -57,9 +55,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="12dp"
             android:text="@string/Team"
-            android:textColor="@color/black" />
-
-
+            android:textColor="@color/newgrey" />
     </RelativeLayout>
 
 
@@ -71,7 +67,6 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:paddingBottom="5dp"
-        android:paddingRight="10dp"
         android:paddingTop="5dp">
 
         <ImageView
@@ -98,10 +93,10 @@
         <ImageView
             android:id="@+id/moreOpation"
             android:layout_width="30dp"
-            android:padding="7dp"
             android:layout_height="30dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:padding="7dp"
             android:src="@drawable/more_favor" />
 
     </RelativeLayout>
@@ -122,7 +117,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:text="@string/Space"
-                android:textColor="@color/pc_black_text" />
+                android:textColor="@color/newgrey" />
 
             <RelativeLayout
                 android:id="@+id/createnewspace"
@@ -136,7 +131,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/add_d" />
+                    android:src="@drawable/new_space" />
 
                 <TextView
                     android:id="@+id/name"
@@ -153,7 +148,6 @@
                     android:layout_height="0.5dp"
                     android:layout_alignParentBottom="true"
                     android:background="@color/divider_line" />
-
             </RelativeLayout>
 
             <android.support.v7.widget.RecyclerView
@@ -167,7 +161,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:text="@string/currentsyncroom"
-                android:textColor="@color/pc_black_text" />
+                android:textColor="@color/newgrey" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycleview"

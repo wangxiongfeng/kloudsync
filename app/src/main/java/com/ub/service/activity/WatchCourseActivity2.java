@@ -88,6 +88,7 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.lidroid.xutils.util.PreferencesCookieStore;
 import com.mining.app.zxing.MipcaActivityCapture;
+import com.ub.kloudsync.activity.TeamSpaceBean;
 import com.ub.kloudsync.activity.TeamSpaceBeanFile;
 import com.ub.kloudsync.activity.TeamSpaceInterfaceListener;
 import com.ub.kloudsync.activity.TeamSpaceInterfaceTools;
@@ -109,7 +110,9 @@ import com.ub.techexcel.bean.LineItem;
 import com.ub.techexcel.bean.NotifyBean;
 import com.ub.techexcel.bean.PageActionBean;
 import com.ub.techexcel.bean.SoundtrackBean;
+import com.ub.techexcel.bean.SyncRoomBean;
 import com.ub.techexcel.tools.ConfirmDialog;
+import com.ub.techexcel.tools.CreateSyncRoomPopup;
 import com.ub.techexcel.tools.DetchedPopup;
 import com.ub.techexcel.tools.DownloadUtil;
 import com.ub.techexcel.tools.FavoritePopup;
@@ -121,6 +124,7 @@ import com.ub.techexcel.tools.NotificationPopup;
 import com.ub.techexcel.tools.ServiceInterfaceListener;
 import com.ub.techexcel.tools.ServiceInterfaceTools;
 import com.ub.techexcel.tools.SpliteSocket;
+import com.ub.techexcel.tools.SyncRoomPopup;
 import com.ub.techexcel.tools.TeamDocumentPopup;
 import com.ub.techexcel.tools.Tools;
 import com.ub.techexcel.tools.VideoPopup;
@@ -272,7 +276,7 @@ public class WatchCourseActivity2 extends BaseActivity implements View.OnClickLi
     private LinearLayout activte_linearlayout;
     private LinearLayout menu_linearlayout;
     private RelativeLayout displayAudience, displayFile, displaychat, displaywebcam, displayVideo, displayautocamera, setting, yinxiang, displayplay;
-    private RelativeLayout prepareStart, prepareclose, prepareScanTV;
+    private RelativeLayout prepareStart, prepareclose, prepareScanTV, displayinvite;
     private LinearLayout noprepare;
 
     public static boolean watch2instance = false;
@@ -295,7 +299,6 @@ public class WatchCourseActivity2 extends BaseActivity implements View.OnClickLi
     private LinearLayout leftview;
     private LinearLayout llpre;
     private TextView leavepre;
-
     private final int LINE_PEERTIME = 0;
     private final int LINE_KLOUDPHONE = 2;
     private final int LINE_EXTERNOAUDIO = 4;
@@ -958,7 +961,6 @@ public class WatchCourseActivity2 extends BaseActivity implements View.OnClickLi
         isPrepare = getIntent().getBooleanExtra("isPrepare", false);
         yinxiangmode = getIntent().getIntExtra("yinxiangmode", 2);
         isInstantMeeting = getIntent().getIntExtra("isInstantMeeting", 0);
-
         Log.e("-------", "  attachmentid= " + attachmentid + " teacherid=  " + teacherid + "  studentid= " + studentid + "  meetingId: " + meetingId + "  identity : " + identity + "    isInstantMeeting :" + isInstantMeeting);
         Log.e("-------", "  fileMeetingId= " + fileMeetingId + " isFinishCourse= " + isFinishCourse);
 
@@ -1873,7 +1875,7 @@ public class WatchCourseActivity2 extends BaseActivity implements View.OnClickLi
                         String currentAttachmentIds = jsonObject.getString("currentItemId");
                         currentPresenterId = jsonObject.getString("currentPresenter");
                         if (!currentPresenterId.equals(AppConfig.UserID)) {
-                            String currentAttachmentPage2= jsonObject.getString("currentPageNumber");
+                            String currentAttachmentPage2 = jsonObject.getString("currentPageNumber");
                             if (currentAttachmentIds.equals(currentAttachmentId)) {  //当前是同一个文档
                                 String changpage = "{\"type\":2,\"page\":" + currentAttachmentPage2 + "}";
                                 Message msg3 = Message.obtain();
@@ -1881,8 +1883,9 @@ public class WatchCourseActivity2 extends BaseActivity implements View.OnClickLi
                                 msg3.what = 0x1109;
                                 if (!isPlaying2) {    //是否在播放音响
                                     if (!isPlaying2) {
-                                        if(currentAttachmentPage2.equals(currentAttachmentPage)){
-                                        }else{ handler.sendMessage(msg3);
+                                        if (currentAttachmentPage2.equals(currentAttachmentPage)) {
+                                        } else {
+                                            handler.sendMessage(msg3);
                                         }
                                     }
                                 }
@@ -2100,6 +2103,8 @@ public class WatchCourseActivity2 extends BaseActivity implements View.OnClickLi
 
         displayAudience = (RelativeLayout) findViewById(R.id.displayAudience);
         displayAudience.setOnClickListener(this);
+        displayinvite = (RelativeLayout) findViewById(R.id.displayinvite);
+        displayinvite.setOnClickListener(this);
         displayFile = (RelativeLayout) findViewById(R.id.displayFile);
         displayFile.setOnClickListener(this);
         yinxiang = (RelativeLayout) findViewById(R.id.yinxiang);
@@ -3637,11 +3642,11 @@ public class WatchCourseActivity2 extends BaseActivity implements View.OnClickLi
     public void audioSyncFunction(final int id, final int isRecording) {
         runOnUiThread(
                 new Runnable() {
-            @Override
-            public void run() {
-                webVideoPlay(id, true, isRecording);  //录音和录action
-            }
-        });
+                    @Override
+                    public void run() {
+                        webVideoPlay(id, true, isRecording);  //录音和录action
+                    }
+                });
     }
 
     /**
@@ -4305,14 +4310,15 @@ public class WatchCourseActivity2 extends BaseActivity implements View.OnClickLi
                         prepareScanTV.setVisibility(View.VISIBLE);
                         displayFile.setVisibility(View.VISIBLE);
                         noprepare.setVisibility(View.GONE);
+                        displayinvite.setVisibility(View.VISIBLE);
                     } else {
                         prepareclose.setVisibility(View.GONE);
                         prepareStart.setVisibility(View.GONE);
                         prepareScanTV.setVisibility(View.GONE);
                         displayFile.setVisibility(View.VISIBLE);
                         noprepare.setVisibility(View.VISIBLE);
+                        displayinvite.setVisibility(View.GONE);
                     }
-
                     if (isFinishCourse) {
                         prepareStart.setVisibility(View.GONE);
                         displayFile.setVisibility(View.VISIBLE);
@@ -4326,6 +4332,9 @@ public class WatchCourseActivity2 extends BaseActivity implements View.OnClickLi
                     activte_linearlayout.setVisibility(View.GONE);
                     command_active.setImageResource(R.drawable.icon_command);
                 }
+                break;
+            case R.id.displayinvite:  // share to  syncroom
+                shareToSyncRoom();
                 break;
             case R.id.prepareclose:
                 notifyend();
@@ -4672,6 +4681,55 @@ public class WatchCourseActivity2 extends BaseActivity implements View.OnClickLi
             default:
                 break;
         }
+    }
+
+    /**
+     * popupwindow
+     */
+    private void shareToSyncRoom() {
+        SyncRoomPopup syncRoomPopup = new SyncRoomPopup();
+        syncRoomPopup.getPopwindow(WatchCourseActivity2.this);
+        syncRoomPopup.setWebCamPopupListener(new SyncRoomPopup.WebCamPopupListener() {
+
+            @Override
+            public void changeOptions(SyncRoomBean syncRoomBean, TeamSpaceBean teamSpaceBean, int spaceid) {
+                if (syncRoomBean.getItemID() == -1) {
+                    CreateSyncRoomPopup createSyncRoomPopup = new CreateSyncRoomPopup();
+                    createSyncRoomPopup.getPopwindow(WatchCourseActivity2.this);
+                    createSyncRoomPopup.setWebCamPopupListener(new CreateSyncRoomPopup.WebCamPopupListener() {
+                        @Override
+                        public void enter(SyncRoomBean syncRoomBean) {
+                            enterSyncroom(syncRoomBean);
+                        }
+                    });
+                    String attachmentid = meetingId.substring(0, meetingId.lastIndexOf(","));
+                    createSyncRoomPopup.StartPop(wv_show, teamSpaceBean,spaceid, attachmentid);
+                } else {
+                    enterSyncroom(syncRoomBean);
+                }
+            }
+
+            @Override
+            public void dismiss() {
+                getWindow().getDecorView().setAlpha(1.0f);
+
+            }
+
+            @Override
+            public void open() {
+                getWindow().getDecorView().setAlpha(0.5f);
+
+            }
+        });
+        syncRoomPopup.StartPop(wv_show);
+
+    }
+
+    private void enterSyncroom(SyncRoomBean syncRoomBean) {
+
+        Toast.makeText(WatchCourseActivity2.this, syncRoomBean.getName(), Toast.LENGTH_LONG).show();
+
+
     }
 
 
@@ -6094,7 +6152,8 @@ public class WatchCourseActivity2 extends BaseActivity implements View.OnClickLi
             params.addBodyParameter(title, file);
             String url = null;
             try {
-                url = AppConfig.URL_PUBLIC + "EventAttachment/UploadRecordedVoice4App?LessonID=" + meetingId + "&DocItemID=" + currentAttachmentId + "&AudioItemID=" + vid + "&Title=" + URLEncoder.encode(LoginGet.getBase64Password(title)) + "&Description=description";
+                url = AppConfig.URL_PUBLIC + "EventAttachment/UploadRecordedVoice4App?LessonID=" +
+                        meetingId + "&DocItemID=" + currentAttachmentId + "&AudioItemID=" + vid + "&Title=" + URLEncoder.encode(LoginGet.getBase64Password(title)) + "&Description=description" + "&Hash=" + Md5Tool.getMd5ByFile(file);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -7294,7 +7353,7 @@ public class WatchCourseActivity2 extends BaseActivity implements View.OnClickLi
             @Override
             public void run() {
                 //加入频道
-                Log.e("HHHHHH",meetingId+   "  "+config().mUid);
+                Log.e("HHHHHH", meetingId + "  " + config().mUid);
                 worker().joinChannel(meetingId.toUpperCase(), config().mUid);
             }
         }, 3000);
@@ -7748,6 +7807,7 @@ public class WatchCourseActivity2 extends BaseActivity implements View.OnClickLi
     public static final int AUDIO_ROUTE_EARPIECE = 1;
     public static final int AUDIO_ROUTE_SPEAKERPHONE = 3;
     public static final int AUDIO_ROUTE_HEADSETBLUETOOTH = 5;
+
     /**
      * 语音路由已变更回调
      *

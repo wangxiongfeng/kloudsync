@@ -118,9 +118,8 @@ public class SwitchTeamPopup implements View.OnClickListener {
     public void StartPop(View v, final int itemid) {
         if (mPopupWindow != null) {
             mPopupWindow.showAtLocation(v, Gravity.RIGHT, 0, 0);
-            TeamSpaceInterfaceTools.getinstance().getTopicList(AppConfig.URL_PUBLIC + "Topic/List?type=1&companyID="
-                            + AppConfig.SchoolID,
-                    TeamSpaceInterfaceTools.TOPICLIST, new TeamSpaceInterfaceListener() {
+            TeamSpaceInterfaceTools.getinstance().getTeamSpaceList(AppConfig.URL_PUBLIC + "TeamSpace/List?companyID=" + AppConfig.SchoolID + "&type=1&parentID=0",
+                    TeamSpaceInterfaceTools.GETTEAMSPACELIST, new TeamSpaceInterfaceListener() {
                         @Override
                         public void getServiceReturnData(Object object) {
                             List<TeamSpaceBean> list = (List<TeamSpaceBean>) object;

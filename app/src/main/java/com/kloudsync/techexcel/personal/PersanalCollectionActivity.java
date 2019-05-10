@@ -445,7 +445,7 @@ public class PersanalCollectionActivity extends SwipeBackActivity {
         rv_pc.addItemDecoration(new RecyclerViewDivider(
                 PersanalCollectionActivity.this, LinearLayout.HORIZONTAL,
                 DensityUtil.dp2px(PersanalCollectionActivity.this,1),getResources().getColor(R.color.lightgrey)));
-        fAdapter = new FavouriteAdapter(mlist);
+        fAdapter = new FavouriteAdapter(PersanalCollectionActivity.this, mlist);
         /*fAdapter.setOnItemLongClickListener(new FavouriteAdapter.OnRecyclerViewItemLongClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -488,7 +488,7 @@ public class PersanalCollectionActivity extends SwipeBackActivity {
 
     private void ShareKloudSync(final TeamSpaceBeanFile lesson, final int id) {
         final PopShareKloudSync psk = new PopShareKloudSync();
-        psk.getPopwindow(getApplicationContext(), lesson, id);
+        psk.getPopwindow(PersanalCollectionActivity.this, lesson, id);
         psk.setPoPDismissListener(new PopShareKloudSync.PopShareKloudSyncDismissListener() {
             @Override
             public void CopyLink() {

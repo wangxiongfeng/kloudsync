@@ -40,6 +40,8 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class InviteNew3Activity extends AppCompatActivity {
 
@@ -214,7 +216,6 @@ public class InviteNew3Activity extends AppCompatActivity {
                 } else {
                     iadapter.UpdateRV(mlist);
                 }
-
             }
 
             @Override
@@ -223,18 +224,16 @@ public class InviteNew3Activity extends AppCompatActivity {
 
             }
         });
-
     }
 
     private void AddContact() {
-        List<Customer>  returnlist=new ArrayList<>();
+        List<Customer> returnlist = new ArrayList<>();
         for (int i = 0; i < mlist.size(); i++) {
             Customer cus = mlist.get(i);
             if (cus.isSelected()) {
                 returnlist.add(cus);
             }
         }
-
         Intent intent = getIntent();
         intent.putExtra("llist", (Serializable) returnlist);
         setResult(RESULT_OK, intent);

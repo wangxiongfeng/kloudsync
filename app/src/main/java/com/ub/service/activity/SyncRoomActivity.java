@@ -16,10 +16,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
-import android.hardware.Camera;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -45,7 +42,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
-import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -100,10 +96,6 @@ import com.ub.teacher.gesture.VideoGestureRelativeLayout;
 import com.ub.techexcel.adapter.BigAgoraAdapter;
 import com.ub.techexcel.adapter.ChatAdapter;
 import com.ub.techexcel.adapter.LeftAgoraAdapter;
-import com.ub.techexcel.adapter.MyRecyclerAdapter;
-import com.ub.techexcel.adapter.MyRecyclerAdapter2;
-import com.ub.techexcel.adapter.SocketLogAdapter;
-import com.ub.techexcel.adapter.TeacherRecyclerAdapter;
 import com.ub.techexcel.bean.AgoraBean;
 import com.ub.techexcel.bean.AudioActionBean;
 import com.ub.techexcel.bean.LineItem;
@@ -321,6 +313,7 @@ public class SyncRoomActivity extends BaseActivity implements View.OnClickListen
     private boolean isLoadPdfAgain = true;
     private int yinxiangmode = 2;
     private boolean isSyncRoom;
+
 
     private static class MyHandler extends Handler {
 
@@ -1443,7 +1436,6 @@ public class SyncRoomActivity extends BaseActivity implements View.OnClickListen
             Message msg2 = Message.obtain();
             msg2.what = 0x1111;
             handler.sendMessage(msg2);
-
             if (identity == 2) { // 老师将权限拿过来
                 if (!leaveUserid.equals(teacherCustomer.getUserID())) {
                     if (currentPresenterId.equals(leaveUserid)) {  // 离开的学生是presenter
@@ -2196,7 +2188,6 @@ public class SyncRoomActivity extends BaseActivity implements View.OnClickListen
         displayautocamera = (RelativeLayout) findViewById(R.id.displayautocamera);
         displayautocamera.setOnClickListener(this);
 
-
         setting = (RelativeLayout) findViewById(R.id.setting);
         if (identity != 2) {
             setting.setVisibility(View.GONE);
@@ -2219,7 +2210,6 @@ public class SyncRoomActivity extends BaseActivity implements View.OnClickListen
         right3bnt.setOnClickListener(this);
         leftview = (LinearLayout) findViewById(R.id.leftview);
         leftview.setOnClickListener(this);
-
 
         selectwebcam.setOnClickListener(this);
         selectconnection.setOnClickListener(this);
@@ -2929,9 +2919,7 @@ public class SyncRoomActivity extends BaseActivity implements View.OnClickListen
                 }
                 // String downloadurl = prefixPdf + currentpageNum + url.substring(url.lastIndexOf("."));  // 得到 https://peertime.cn/CWDocs/P49/Attachment/D3191/test_2.pdf
                 String downloadurl;
-
                 downloadurl = prefixPdf + currentpageNum + url.substring(url.lastIndexOf("."));  // 得到 https://peertime.cn/CWDocs/P49/Attachment/D3191/test_2.pdf
-
                 Log.e("webview-downloadPdf", screenWidth + "  " + "  downloadurl    --------------->  " + downloadurl);
                 if (httpHandler != null) {
                     httpHandler.cancel();
@@ -2944,7 +2932,6 @@ public class SyncRoomActivity extends BaseActivity implements View.OnClickListen
 
                             @Override
                             public void onStart() {
-
                                 super.onStart();
                             }
 
@@ -3063,7 +3050,6 @@ public class SyncRoomActivity extends BaseActivity implements View.OnClickListen
             }
         }).start();
 
-
         if (isChangePageNumber) {
             isChangePageNumber = false;
             // 2 清空当前页的线
@@ -3075,7 +3061,6 @@ public class SyncRoomActivity extends BaseActivity implements View.OnClickListen
             });
             // 3 displayDrawingLine =1 展示所有的线
             getLineAction(currentAttachmentPage, false);
-
         }
         if (isChangePageNumber2) {
             isChangePageNumber2 = false;
@@ -3199,7 +3184,6 @@ public class SyncRoomActivity extends BaseActivity implements View.OnClickListen
             } else {
                 if (studentCustomer.getUserID().equals(f)) {
                     Log.e("webview-reflect", "学生");
-
                     if (isSync) {
                         if (!TextUtils.isEmpty(result)) {
                             try {
@@ -3417,8 +3401,6 @@ public class SyncRoomActivity extends BaseActivity implements View.OnClickListen
                 }
             });
         }
-
-
     }
 
 
@@ -3490,7 +3472,6 @@ public class SyncRoomActivity extends BaseActivity implements View.OnClickListen
             @Override
             public void dismiss() {
                 getWindow().getDecorView().setAlpha(1.0f);
-
             }
 
             @Override
@@ -3851,10 +3832,7 @@ public class SyncRoomActivity extends BaseActivity implements View.OnClickListen
                 notifyend();
                 closeCourse(1);
                 finish();
-
                 break;
-
-
             case R.id.leavell:
                 notifyleave();
                 closeCourse(0);
@@ -4132,12 +4110,12 @@ public class SyncRoomActivity extends BaseActivity implements View.OnClickListen
             }
         });
         syncRoomPropertyPopup.StartPop(wv_show, lessonId, getIntent().getStringExtra("syncRoomname"));
-
         syncroomll.setVisibility(View.GONE);
         menu.setImageResource(R.drawable.icon_menu);
     }
 
     private void openMemberPopup() {
+
         SyncRoomMemberPopup syncRoomMemberPopup = new SyncRoomMemberPopup();
         syncRoomMemberPopup.getPopwindow(this);
         syncRoomMemberPopup.setWebCamPopupListener(new SyncRoomMemberPopup.WebCamPopupListener() {
@@ -4239,7 +4217,6 @@ public class SyncRoomActivity extends BaseActivity implements View.OnClickListen
                     }
                 });
                 loginGet.MyFavoriteRequest(SyncRoomActivity.this, 1);
-
             }
 
             @Override
@@ -4481,7 +4458,7 @@ public class SyncRoomActivity extends BaseActivity implements View.OnClickListen
         syncRoomPopup.setWebCamPopupListener(new SyncRoomPopup.WebCamPopupListener() {
 
             @Override
-            public void changeOptions(SyncRoomBean syncRoomBean, final TeamSpaceBean teamSpaceBean) {
+            public void changeOptions(SyncRoomBean syncRoomBean, TeamSpaceBean teamSpaceBean, int spaceid) {
                 if (syncRoomBean.getItemID() == -1) {
                     CreateSyncRoomPopup createSyncRoomPopup = new CreateSyncRoomPopup();
                     createSyncRoomPopup.getPopwindow(SyncRoomActivity.this);
@@ -4491,8 +4468,8 @@ public class SyncRoomActivity extends BaseActivity implements View.OnClickListen
                             enterSyncroom(syncRoomBean);
                         }
                     });
-                    String attachmentid = currentAttachmentId2;
-                    createSyncRoomPopup.StartPop(wv_show, teamSpaceBean, attachmentid);
+                    String attachmentid = meetingId.substring(0, meetingId.lastIndexOf(","));
+                    createSyncRoomPopup.StartPop(wv_show, teamSpaceBean,spaceid, attachmentid);
                 } else {
                     enterSyncroom(syncRoomBean);
                 }
@@ -5971,7 +5948,8 @@ public class SyncRoomActivity extends BaseActivity implements View.OnClickListen
             params.addBodyParameter(title, file);
             String url = null;
             try {
-                url = AppConfig.URL_PUBLIC + "EventAttachment/UploadRecordedVoice4App?LessonID=" + lessonId + "&DocItemID=" + currentAttachmentId + "&AudioItemID=" + vid + "&Title=" + URLEncoder.encode(LoginGet.getBase64Password(title)) + "&Description=description";
+                url = AppConfig.URL_PUBLIC + "EventAttachment/UploadRecordedVoice4App?LessonID=" + (TextUtils.isEmpty(lessonId) ? 0 : lessonId) + "&DocItemID=" + currentAttachmentId + "&AudioItemID=" + vid +
+                        "&Title=" + URLEncoder.encode(LoginGet.getBase64Password(title)) + "&Description=description" + "&Hash=" + Md5Tool.getMd5ByFile(file);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -6205,6 +6183,7 @@ public class SyncRoomActivity extends BaseActivity implements View.OnClickListen
                         item.setHtml5(false);
                         item.setAttachmentID(lineitem.getString("ItemID"));
                         item.setAttachmentID2(lineitem.getString("AttachmentID"));
+                        item.setCreatedDate(lineitem.getString("CreatedDate"));
                         item.setFlag(0);
                         if (lineitem.getInt("Status") == 0) {
                             items.add(item);
@@ -6226,9 +6205,6 @@ public class SyncRoomActivity extends BaseActivity implements View.OnClickListen
             e.printStackTrace();
         }
     }
-
-
-    String teamspaceName = "";
 
 
     /**
@@ -6434,6 +6410,7 @@ public class SyncRoomActivity extends BaseActivity implements View.OnClickListen
                     Toast.LENGTH_LONG).show();
         }
 
+
     }
 
     private Popupdate puo;
@@ -6451,15 +6428,11 @@ public class SyncRoomActivity extends BaseActivity implements View.OnClickListen
             try {
                 url = AppConfig.URL_PUBLIC + "FavoriteAttachment/AddNewFavorite?Title="
                         + URLEncoder.encode(LoginGet.getBase64Password(title), "UTF-8") +
-                        /*"&schoolID=" +
-                        SchoolID
-                        +*/ "&Hash=" + Md5Tool.getMd5ByFile(file);
+                        "&Hash=" + Md5Tool.getMd5ByFile(file);
                 Log.e("hahaha", url + ":" + title);
             } catch (Exception e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-
             Log.e("url", url);
             HttpUtils http = new HttpUtils();
             http.configResponseTextCharset("UTF-8");
@@ -6916,7 +6889,7 @@ public class SyncRoomActivity extends BaseActivity implements View.OnClickListen
                         }
                         break;
                 }
-                return true;
+                return true;   //不走toggle自己的onTouchEvent方法  不走onClick
             }
         });
         toggleicon = (ImageView) findViewById(R.id.toggleicon);

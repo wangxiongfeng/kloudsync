@@ -15,5 +15,6 @@ public interface VideoViewEventListener {
     void closeOtherVideo(AgoraBean user);  //presenter 关闭别人的Video
 
     void openMyAudio(AgoraBean user);
+
     void openMyVideo(AgoraBean user);
 }

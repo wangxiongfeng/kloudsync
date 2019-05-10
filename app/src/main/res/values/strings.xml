@@ -324,7 +324,12 @@
     <string name="Create_Space">Create New Space</string>
     <string name="Current_file">Documents of Current Team</string>
     <string name="Swtich_team">Switch Team</string>
+    <string name="Swtich_space">Switch Space</string>
     <string name="Create_team">Create New Team</string>
+
+
+    <string name="Select_at">Select a Team</string>
+    <string name="Select_af">Select a file</string>
 
     <!-- xfwang -->
 

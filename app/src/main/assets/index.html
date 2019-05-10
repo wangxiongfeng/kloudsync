@@ -77,6 +77,7 @@
             if (ISPC)
             {
                 //ShowPDF('1.pdf', 1, "");
+                SetSizeMode(1);
                 ShowPDF("Test_<10>.jpg", 1);
                 //ShowPDF('https://pt.techexcel.com/scripts/texcel/customerwise/TxSwDownload/e2f3020fe2f302dce2f302dce2f308a1/William%27s+demo+ppt.pdf', 1);
                 //ShowPPT("https://192.168.22.137:4433/ppt/data/", PageNumber);
@@ -367,7 +368,7 @@
                 whiteboard.RefreshDocument(function()  {
                     whiteboard.TriggerViewChange();
                     CurrentScale = 1;
-                    updateToolbar();
+                    //updateToolbar();
                 });
             });
         }
@@ -1277,6 +1278,7 @@
         }
         function CheckZoom()
         {
+            return;
             var container = GetPageContainer(PageNumber);
             var ow = parseInt(container.attr("CW"));
             var cw = getViewWidth() * CurrentScale;
@@ -1462,6 +1464,13 @@
             ShowPDFFile(Url, pageNum, function ()
             {
                 ShowPdfInfo();
+            });
+        }
+        function SetSizeMode(mode) {
+            whiteboard.SetSizeMode(mode);
+            whiteboard.RefreshDocument(function()  {
+                //whiteboard.TriggerViewChange();
+                CurrentScale = 1;
             });
         }
         function ShowDebugInfo(isshow)

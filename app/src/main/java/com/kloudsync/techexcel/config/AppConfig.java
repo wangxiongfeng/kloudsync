@@ -184,6 +184,7 @@ public class AppConfig {
     public static final int CreateTeamTopic = 62;
     public static final int SpaceAttachment = 63;
     public static final int SwitchSpace = 64;
+    public static final int RemoveMember = 65;
     public static final int Upload_NoExist = -6002;
     public static final int Upload_Exist = -6003;
     public static final int COURSE_PORT = 8082;

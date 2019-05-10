@@ -5,6 +5,8 @@ import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kloudsync.techexcel.R;
+import com.kloudsync.techexcel.adapter.ShowSpaceAdapter;
 import com.kloudsync.techexcel.config.AppConfig;
 import com.kloudsync.techexcel.help.DialogTSDelete;
 import com.kloudsync.techexcel.info.Customer;
@@ -26,6 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by wang on 2017/9/18.
@@ -39,14 +43,17 @@ public class SpaceDeletePopup implements View.OnClickListener {
     private View view;
 
     private TextView ok, cancel;
-    private TextView tv_space, tv_team;
+    private TextView tv_team;
     private TextView tv_note, tv_title;
-    private RelativeLayout rl_space, rl_team;
+    private RecyclerView rv_space;
+    private RelativeLayout rl_team;
+
+    private ShowSpaceAdapter madapter;
 
     private static FavoritePoPListener mFavoritePoPListener;
 
     private ArrayList<Customer> cuslist = new ArrayList<Customer>();
-    private int spaceid;
+    private List<Space> mlist = new ArrayList<>();
 
     private int tid = -1;
     private int sid = -1;
@@ -92,7 +99,6 @@ public class SpaceDeletePopup implements View.OnClickListener {
     };
 
 
-
     public interface FavoritePoPListener {
 
         void dismiss();
@@ -115,21 +121,44 @@ public class SpaceDeletePopup implements View.OnClickListener {
         getPopupWindowInstance();
     }
 
-    public void setSP(ArrayList<Customer> cuslist, int spaceid){
+    public void setSP(ArrayList<Customer> cuslist) {
         this.cuslist = cuslist;
-        this.spaceid = spaceid;
     }
 
-    public void ChangeMove(TeamSpaceBeanFile lesson){
+    public void ChangeMove(TeamSpaceBeanFile lesson) {
         flagM = true;
         this.lesson = lesson;
-        if(tv_note!=null){
+        if (tv_note != null) {
             tv_note.setVisibility(View.GONE);
-            tv_title.setText("Move Document");
+            ok.setVisibility(View.VISIBLE);
+            tv_title.setText("Move to");
+        }
+
+    }
+
+    public void SendTeam(int tid, String name) {
+        this.tid = tid;
+        if (tv_team != null) {
+            tv_team.setText(name);
+            GetSplist(tid);
+        }
+
+    }
+
+    private void GetSplist(int tid) {
+        for (int i = 0; i < cuslist.size(); i++) {
+            Customer cus = cuslist.get(i);
+            if (tid == cus.getSpace().getItemID()) {
+                mlist = cus.getSpaceList();
+                madapter.UpdateRV(mlist, sid);
+                break;
+            }
         }
     }
-    public void ChangeMove2(){
+
+    public void ChangeMove2() {
         flagM = false;
+        ok.setVisibility(View.GONE);
     }
 
     public void getPopupWindowInstance() {
@@ -138,6 +167,7 @@ public class SpaceDeletePopup implements View.OnClickListener {
             return;
         } else {
             initPopuptWindow();
+
         }
     }
 
@@ -148,19 +178,20 @@ public class SpaceDeletePopup implements View.OnClickListener {
 
         cancel = (TextView) view.findViewById(R.id.cancel);
         ok = (TextView) view.findViewById(R.id.ok);
-        tv_space = (TextView) view.findViewById(R.id.tv_space);
         tv_team = (TextView) view.findViewById(R.id.tv_team);
         tv_title = (TextView) view.findViewById(R.id.tv_title);
         tv_note = (TextView) view.findViewById(R.id.tv_note);
-        rl_space = (RelativeLayout) view.findViewById(R.id.rl_space);
         rl_team = (RelativeLayout) view.findViewById(R.id.rl_team);
+        rv_space = (RecyclerView) view.findViewById(R.id.rv_space);
         cancel.setOnClickListener(this);
         ok.setOnClickListener(this);
         rl_team.setOnClickListener(this);
-        rl_space.setOnClickListener(this);
+        rv_space.setOnClickListener(this);
 
-        mPopupWindow = new PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT, false);
+        ShowSpace();
+
+        mPopupWindow = new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT, false);
         mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
@@ -170,6 +201,25 @@ public class SpaceDeletePopup implements View.OnClickListener {
         mPopupWindow.setFocusable(true);
         mPopupWindow.setOutsideTouchable(true);
         mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
+    }
+
+    private void ShowSpace() {
+        madapter = new ShowSpaceAdapter(mlist);
+        madapter.setOnItemClickListener(new ShowSpaceAdapter.OnRecyclerViewItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Space sp = mlist.get(position);
+                sid = sp.getItemID();
+                GetSplist(tid);
+                if (!flagM) {
+                    mFavoritePoPListener.delete(sid);
+                    dismiss();
+                }
+            }
+        });
+        LinearLayoutManager manager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
+        rv_space.setLayoutManager(manager);
+        rv_space.setAdapter(madapter);
     }
 
 
@@ -201,11 +251,8 @@ public class SpaceDeletePopup implements View.OnClickListener {
             case R.id.ok:
                 BoyNextDoor();
                 break;
-            case R.id.rl_space:
-                SelectID(1);
-                break;
             case R.id.rl_team:
-                SelectID(0);
+                SelectID();
                 break;
 
             default:
@@ -214,14 +261,14 @@ public class SpaceDeletePopup implements View.OnClickListener {
     }
 
     private void BoyNextDoor() {
-        if(sid < 0){
-            Toast.makeText(mContext,"Please select space first",Toast.LENGTH_LONG).show();
+        if (sid < 0) {
+            Toast.makeText(mContext, "Please select space first", Toast.LENGTH_LONG).show();
             return;
         }
         mFavoritePoPListener.delete(sid);
-        if(flagM){
+        if (flagM) {
             SwitchSpace();
-        }else {
+        } else {
             dismiss();
         }
 
@@ -260,10 +307,20 @@ public class SpaceDeletePopup implements View.OnClickListener {
 
     }
 
-    private void SelectID(int type) {
+    private void SelectID() {
         DialogTSDelete dts = new DialogTSDelete();
         dts.setPoPDismissListener(new DialogTSDelete.DialogDismissListener() {
             @Override
+            public void PopSelect(Customer cus) {
+                tv_team.setText(cus.getSpace().getName());
+                if (tid != cus.getSpace().getItemID()) {
+                    sid = -1;
+                }
+                tid = cus.getSpace().getItemID();
+                GetSplist(tid);
+            }
+
+           /* @Override
             public void PopSelect(Space sp, int type) {
                 if(0 == type){
                     tv_team.setText(sp.getName());
@@ -275,17 +332,17 @@ public class SpaceDeletePopup implements View.OnClickListener {
                     tv_space.setText(sp.getName());
                     sid = sp.getItemID();
                 }
-            }
+            }*/
         });
-        if(0 == type) {
-            dts.SetType(type, spaceid);
+        /*if(0 == type) {
+//            dts.SetType(type, spaceid);
         }else if(1 == type) {
             if(tid < 0){
                 Toast.makeText(mContext,"Please select team first",Toast.LENGTH_LONG).show();
                 return;
             }
-            dts.SetType(type, tid);
-        }
+//            dts.SetType(type, tid);
+        }*/
         dts.EditCancel(mContext, cuslist);
     }
 

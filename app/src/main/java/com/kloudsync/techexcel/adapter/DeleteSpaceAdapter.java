@@ -4,10 +4,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kloudsync.techexcel.R;
-import com.kloudsync.techexcel.info.Space;
+import com.kloudsync.techexcel.info.Customer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +20,10 @@ import java.util.List;
 public class DeleteSpaceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
-    private List<Space> mlist = new ArrayList<>();
+    private List<Customer> mlist = new ArrayList<>();
 
 
-    public DeleteSpaceAdapter(List<Space> mlist) {
+    public DeleteSpaceAdapter(List<Customer> mlist) {
         this.mlist = mlist;
     }
     private OnRecyclerViewItemClickListener mOnItemClickListener = null;
@@ -36,7 +37,7 @@ public class DeleteSpaceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
 
-    public void UpdateRV(List<Space> mlist) {
+    public void UpdateRV(List<Customer> mlist) {
         this.mlist = mlist;
         notifyDataSetChanged();
     }
@@ -50,8 +51,20 @@ public class DeleteSpaceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
         final ViewHolder holder = (ViewHolder) viewHolder;
-        final Space space = mlist.get(position);
-        holder.tv_name.setText(space.getName());
+        final Customer cus = mlist.get(position);
+        holder.tv_name.setText(cus.getSpace().getName());
+        holder.tv_space.setText(cus.getSpaceList().size() + " spaces");
+        switch (position % 3){
+            case 0:
+                holder.img_avatar.setImageResource(R.drawable.avtar_1);
+                break;
+            case 1:
+                holder.img_avatar.setImageResource(R.drawable.avtar_2);
+                break;
+            case 2:
+                holder.img_avatar.setImageResource(R.drawable.avtar_6);
+                break;
+        }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,9 +81,13 @@ public class DeleteSpaceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tv_name;
+        TextView tv_space;
+        ImageView img_avatar;
         ViewHolder(View view) {
             super(view);
             tv_name = (TextView) view.findViewById(R.id.tv_name);
+            tv_space = (TextView) view.findViewById(R.id.tv_space);
+            img_avatar = (ImageView) view.findViewById(R.id.img_avatar);
         }
     }
 }

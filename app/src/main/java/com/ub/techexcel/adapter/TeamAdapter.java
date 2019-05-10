@@ -30,7 +30,7 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.RecycleHolder>
     public interface OnItemLectureListener {
         void onItem(TeamSpaceBean teamSpaceBean);
     }
-    
+
 
     public void setOnItemLectureListener(OnItemLectureListener onItemLectureListener) {
         this.onItemLectureListener = onItemLectureListener;
@@ -49,11 +49,7 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.RecycleHolder>
     public void onBindViewHolder(RecycleHolder holder, int position) {
         final TeamSpaceBean item = list.get(position);
         holder.documetname.setText(item.getName());
-        if(item.getName().length() > 0) {
-            holder.tv_sort.setText(item.getName().substring(0, 1));
-        }else{
-            holder.tv_sort.setText("");
-        }
+
 
         holder.lin_favour.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,6 +62,28 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.RecycleHolder>
         } else {
             holder.select.setVisibility(View.GONE);
         }
+
+        switch (position % 5) {
+            case 0:
+                holder.icon.setImageResource(R.drawable.avtar_1);
+                break;
+            case 1:
+                holder.icon.setImageResource(R.drawable.avtar_2);
+                break;
+            case 2:
+                holder.icon.setImageResource(R.drawable.avtar_3);
+                break;
+            case 3:
+                holder.icon.setImageResource(R.drawable.avtar_4);
+                break;
+            case 4:
+                holder.icon.setImageResource(R.drawable.avtar_5);
+                break;
+            default:
+                holder.icon.setImageResource(R.drawable.avtar_6);
+                break;
+        }
+
     }
 
     @Override
@@ -76,16 +94,15 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.RecycleHolder>
     class RecycleHolder extends RecyclerView.ViewHolder {
 
         TextView documetname;
-        TextView tv_sort;
         RelativeLayout lin_favour;
-        ImageView select;
+        ImageView select, icon;
 
         public RecycleHolder(View itemView) {
             super(itemView);
             documetname = (TextView) itemView.findViewById(R.id.documetname);
-            tv_sort = (TextView) itemView.findViewById(R.id.tv_sort);
             lin_favour = (RelativeLayout) itemView.findViewById(R.id.lin_favour);
             select = (ImageView) itemView.findViewById(R.id.selectimage);
+            icon = (ImageView) itemView.findViewById(R.id.icon);
         }
 
     }

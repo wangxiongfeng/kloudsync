@@ -5,8 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.kloudsync.techexcel.R;
 import com.kloudsync.techexcel.config.AppConfig;
 import com.kloudsync.techexcel.info.Favorite;
@@ -33,6 +37,7 @@ import com.ub.service.activity.WatchCourseActivity3;
 import com.ub.techexcel.bean.LineItem;
 import com.ub.techexcel.bean.SyncRoomBean;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -153,6 +158,7 @@ public class SyncRoomDocumentPopup implements View.OnClickListener {
         mPopupWindow.update();
         mPopupWindow.setAnimationStyle(R.style.anination3);
 
+
     }
 
 
@@ -253,10 +259,15 @@ public class SyncRoomDocumentPopup implements View.OnClickListener {
         public void onBindViewHolder(RecycleHolder2 holder, int position) {
             final LineItem lineItem = list.get(position);
             holder.title.setText(lineItem.getFileName());
-
             holder.synccount.setText("Sync:" + lineItem.getSyncRoomCount());
-
-            holder.fileicon.setOnClickListener(new View.OnClickListener() {
+            String date = lineItem.getCreatedDate();
+            if (!TextUtils.isEmpty(date)) {
+                long dd = Long.parseLong(date);
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy_MM_dd HH:mm:ss");
+                String haha = simpleDateFormat.format(dd);
+                holder.date.setText("Create Date: " + haha);
+            }
+            holder.img_url.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     webCamPopupListener.changeOptions(lineItem);
@@ -281,7 +292,15 @@ public class SyncRoomDocumentPopup implements View.OnClickListener {
                     upload_linearlayout.setVisibility(View.GONE);
                 }
             });
-
+            String url = lineItem.getUrl();
+            if (!TextUtils.isEmpty(url)) {
+                url = url.substring(0, url.lastIndexOf("<")) + "1" + url.substring(url.lastIndexOf("."), url.length());
+                Uri imageUri = null;
+                if (!TextUtils.isEmpty(url)) {
+                    imageUri = Uri.parse(url);
+                }
+                holder.img_url.setImageURI(imageUri);
+            }
         }
 
         @Override
@@ -291,18 +310,20 @@ public class SyncRoomDocumentPopup implements View.OnClickListener {
 
         class RecycleHolder2 extends RecyclerView.ViewHolder {
             TextView title;
-            TextView fileicon;
             TextView synccount;
             ImageView more;
             LinearLayout ll;
+            SimpleDraweeView img_url;
+            TextView date;
 
             public RecycleHolder2(View itemView) {
                 super(itemView);
                 title = (TextView) itemView.findViewById(R.id.title);
-                fileicon = (TextView) itemView.findViewById(R.id.fileicon);
                 synccount = (TextView) itemView.findViewById(R.id.synccount);
+                date = (TextView) itemView.findViewById(R.id.date);
                 more = (ImageView) itemView.findViewById(R.id.more);
                 ll = (LinearLayout) itemView.findViewById(R.id.ll);
+                img_url = (SimpleDraweeView) itemView.findViewById(R.id.img_url);
             }
         }
     }

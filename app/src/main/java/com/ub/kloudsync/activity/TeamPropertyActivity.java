@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.kloudsync.techexcel.R;
 import com.kloudsync.techexcel.adapter.SpacePropertyAdapter;
 import com.kloudsync.techexcel.config.AppConfig;
+import com.kloudsync.techexcel.docment.EditTeamActivity;
 import com.kloudsync.techexcel.docment.InviteNewActivity;
 import com.kloudsync.techexcel.docment.RenameActivity;
 import com.kloudsync.techexcel.service.ConnectService;
@@ -133,7 +134,7 @@ public class TeamPropertyActivity extends Activity implements View.OnClickListen
         img_back = (ImageView) findViewById(R.id.img_notice);
         moreOpation = (ImageView) findViewById(R.id.moreOpation);
         teamrl = (RelativeLayout) findViewById(R.id.teamrl);
-        moreOpation.setOnClickListener(this);
+//        moreOpation.setOnClickListener(this);
         teamrl.setOnClickListener(this);
         img_back.setOnClickListener(this);
         tv_invite.setOnClickListener(this);
@@ -172,16 +173,24 @@ public class TeamPropertyActivity extends Activity implements View.OnClickListen
                 break;
             case R.id.teamrl:
 //                GoToRename();
+                GoTOET();
                 break;
             case R.id.moreOpation:
-                MoreForTeam();
+//                MoreForTeam();
                 break;
         }
+    }
+
+    private void GoTOET() {
+        Intent intent = new Intent(TeamPropertyActivity.this, EditTeamActivity.class);
+        intent.putExtra("itemID",itemID);
+        startActivity(intent);
     }
 
     private void MoreForTeam() {
         TeamMorePopup teamMorePopup=new TeamMorePopup();
         teamMorePopup.setIsTeam(true);
+        teamMorePopup.setTSid(itemID);
         teamMorePopup.getPopwindow(this);
         teamMorePopup.setFavoritePoPListener(new TeamMorePopup.FavoritePoPListener() {
             @Override
@@ -232,7 +241,7 @@ public class TeamPropertyActivity extends Activity implements View.OnClickListen
 
             @Override
             public void quit() {
-
+                finish();
             }
 
             @Override

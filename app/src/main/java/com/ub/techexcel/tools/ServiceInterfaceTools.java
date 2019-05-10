@@ -189,6 +189,7 @@ public class ServiceInterfaceTools {
                             soundtrackBean.setUserName(jsonObject.getString("UserName"));
                             soundtrackBean.setAvatarUrl(jsonObject.getString("AvatarUrl"));
                             soundtrackBean.setDuration(jsonObject.getString("Duration"));
+                            soundtrackBean.setCreatedDate(jsonObject.getString("CreatedDate"));
                             soundtrackBean.setHidden(isHidden);
                             soundtrackBean.setHavePresenter(ishavepresenter);
                             mlist.add(soundtrackBean);

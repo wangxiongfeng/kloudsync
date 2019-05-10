@@ -6,12 +6,12 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.kloudsync.techexcel.R;
-import com.kloudsync.techexcel.tool.PopupWindowUtil;
 import com.ub.kloudsync.activity.TeamSpaceBeanFile;
 
 public class PopDocument {
@@ -56,10 +56,12 @@ public class PopDocument {
         }
     }
 
-    private TextView tv_view, tv_edit;
-    private TextView tv_delete;
-    private TextView tv_move;
-    private TextView tv_share;
+    private LinearLayout lin_share;
+    private LinearLayout lin_move;
+    private LinearLayout lin_edit;
+    private LinearLayout lin_delete;
+    private ImageView img_close;
+    private TextView tv_name;
     private View popupWindow;
 
     @SuppressWarnings("deprecation")
@@ -67,13 +69,16 @@ public class PopDocument {
         LayoutInflater layoutInflater = LayoutInflater.from(mContext);
         popupWindow = layoutInflater.inflate(R.layout.pop_document, null);
 
-        tv_view = (TextView) popupWindow.findViewById(R.id.tv_view);
-        tv_edit = (TextView) popupWindow.findViewById(R.id.tv_edit);
-        tv_delete = (TextView) popupWindow.findViewById(R.id.tv_delete);
-        tv_share = (TextView) popupWindow.findViewById(R.id.tv_share);
-        tv_move = (TextView) popupWindow.findViewById(R.id.tv_move);
+        lin_share = (LinearLayout) popupWindow.findViewById(R.id.lin_share);
+        lin_move = (LinearLayout) popupWindow.findViewById(R.id.lin_move);
+        lin_edit = (LinearLayout) popupWindow.findViewById(R.id.lin_edit);
+        lin_delete = (LinearLayout) popupWindow.findViewById(R.id.lin_delete);
+        img_close = (ImageView) popupWindow.findViewById(R.id.img_close);
+        tv_name = (TextView) popupWindow.findViewById(R.id.tv_name);
 
-        mPopupWindow = new PopupWindow(popupWindow, LinearLayout.LayoutParams.WRAP_CONTENT,
+        tv_name.setText(lesson.getTitle());
+
+        mPopupWindow = new PopupWindow(popupWindow, LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT, false);
 
         mPopupWindow.getWidth();
@@ -88,11 +93,11 @@ public class PopDocument {
             }
         });
 
-        tv_view.setOnClickListener(new myOnClick());
-        tv_edit.setOnClickListener(new myOnClick());
-        tv_delete.setOnClickListener(new myOnClick());
-        tv_move.setOnClickListener(new myOnClick());
-        tv_share.setOnClickListener(new myOnClick());
+        lin_share.setOnClickListener(new myOnClick());
+        lin_move.setOnClickListener(new myOnClick());
+        lin_edit.setOnClickListener(new myOnClick());
+        lin_delete.setOnClickListener(new myOnClick());
+        img_close.setOnClickListener(new myOnClick());
 
 
         // 使其聚焦
@@ -109,24 +114,27 @@ public class PopDocument {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.tv_view:
+                /*case R.id.tv_view:
                     popDocumentListener.PopView();
                     mPopupWindow.dismiss();
-                    break;
-                case R.id.tv_edit:
+                    break;*/
+                case R.id.lin_edit:
                     popDocumentListener.PopEdit();
                     mPopupWindow.dismiss();
                     break;
-                case R.id.tv_delete:
+                case R.id.lin_delete:
                     popDocumentListener.PopDelete();
                     mPopupWindow.dismiss();
                     break;
-                case R.id.tv_share:
+                case R.id.lin_share:
                     popDocumentListener.PopShare();
                     mPopupWindow.dismiss();
                     break;
-                case R.id.tv_move:
+                case R.id.lin_move:
                     popDocumentListener.PopMove();
+                    mPopupWindow.dismiss();
+                    break;
+                case R.id.img_close:
                     mPopupWindow.dismiss();
                     break;
 
@@ -139,8 +147,9 @@ public class PopDocument {
     }
 
     public void StartPop(View v) {
-        int windowPos[] = PopupWindowUtil.calculatePopWindowPos(v, popupWindow , 100);
-        mPopupWindow.showAtLocation(v, Gravity.TOP | Gravity.START, windowPos[0], windowPos[1]);
+//        int windowPos[] = PopupWindowUtil.calculatePopWindowPos(v, popupWindow , 100);
+//        mPopupWindow.showAtLocation(v, Gravity.TOP | Gravity.START, windowPos[0], windowPos[1]);
+        mPopupWindow.showAtLocation(v, Gravity.BOTTOM, 0, 0);
     }
 
 

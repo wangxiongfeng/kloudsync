@@ -24,6 +24,8 @@ import android.widget.Toast;
 import com.kloudsync.techexcel.R;
 import com.kloudsync.techexcel.config.AppConfig;
 import com.kloudsync.techexcel.docment.WeiXinApi;
+import com.kloudsync.techexcel.info.Customer;
+import com.kloudsync.techexcel.service.ConnectService;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.SendMessageToWX;
 import com.tencent.mm.sdk.openapi.WXMediaMessage;
@@ -32,6 +34,8 @@ import com.tencent.mm.sdk.platformtools.Util;
 import com.ub.techexcel.adapter.YinXiangAdapter;
 import com.ub.techexcel.adapter.YinXiangAdapter2;
 import com.ub.techexcel.bean.SoundtrackBean;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,12 +54,10 @@ public class YinxiangPopup implements View.OnClickListener {
     private ImageView backimg;
     private RecyclerView recycleview;
     private RecyclerView allrecycleview;
-
     private RelativeLayout ll1;
     private RelativeLayout ll2;
     private TextView selectmore;
     private TextView ok;
-
     private LinearLayout createyinxiang;
     private YinXiangAdapter yinXiangAdapter;
     private YinXiangAdapter2 yinXiangAdapter2;
@@ -102,7 +104,7 @@ public class YinxiangPopup implements View.OnClickListener {
 
 
     public void initPopuptWindow() {
-
+        
         LayoutInflater layoutInflater = LayoutInflater.from(mContext);
         view = layoutInflater.inflate(R.layout.yinxiang_popup, null);
         close = (ImageView) view.findViewById(R.id.close);
@@ -134,6 +136,7 @@ public class YinxiangPopup implements View.OnClickListener {
 
             @Override
             public void deleteYinxiang(SoundtrackBean soundtrackBean) {
+                dismiss();
                 deleteYinxiang2(soundtrackBean);
             }
 
@@ -156,7 +159,24 @@ public class YinxiangPopup implements View.OnClickListener {
 
             @Override
             public void shareInApp(SoundtrackBean soundtrackBean) {
+                dismiss();
+                InviteOthersPopup inviteOthersPopup = new InviteOthersPopup();
+                inviteOthersPopup.getPopwindow(mContext);
+                inviteOthersPopup.setFavoritePoPListener(new InviteOthersPopup.FavoritePoPListener() {
+                    @Override
+                    public void select(List<Customer> list) {
+                        SharedInAppPopup sharedInAppPopup = new SharedInAppPopup();
+                        sharedInAppPopup.getPopwindow(mContext);
+                        sharedInAppPopup.setFavoritePoPListener(new SharedInAppPopup.FavoritePoPListener() {
+                            @Override
+                            public void select(List<Customer> list) {
 
+                            }
+                        });
+                        sharedInAppPopup.StartPop(outView);
+                    }
+                });
+                inviteOthersPopup.StartPop(outView);
             }
         });
         recycleview.setAdapter(yinXiangAdapter);
@@ -269,18 +289,19 @@ public class YinxiangPopup implements View.OnClickListener {
 
     private boolean isHidden;
     private boolean ishavepresenter = true;
+    private View outView;
 
     @SuppressLint("NewApi")
     public void StartPop(View v, String attachmentid, String lessonid, boolean isHidden, boolean ishavepresenter) {
+        this.outView = v;
+        yinXiangAdapter.setView(outView);
         if (mPopupWindow != null) {
             this.isHidden = isHidden;
             this.ishavepresenter = ishavepresenter;
             Log.e("eeeee", attachmentid + "   " + lessonid + "  " + isHidden + "  " + ishavepresenter);
-
             if (TextUtils.isEmpty(attachmentid)) {
                 return;
             }
-
             if (attachmentid.equals("0")) {
                 selectmore.setVisibility(View.GONE);
             }
@@ -291,8 +312,6 @@ public class YinxiangPopup implements View.OnClickListener {
             } else {
                 getSoundtrack(attachmentid, lessonid);
             }
-
-
             if (isHidden) {
                 createyinxiang.setVisibility(View.GONE);
             } else {
@@ -329,7 +348,6 @@ public class YinxiangPopup implements View.OnClickListener {
                 ll1.setVisibility(View.GONE);
                 ll2.setVisibility(View.VISIBLE);
                 getSoundtrack2(attachmentid);
-
                 break;
             case R.id.ok:
                 ll1.setVisibility(View.VISIBLE);
@@ -397,7 +415,6 @@ public class YinxiangPopup implements View.OnClickListener {
         myClip = ClipData.newPlainText("text", text);
         myClipboard.setPrimaryClip(myClip);
         Toast.makeText(mContext, htmlUrl + " Link Copied", Toast.LENGTH_SHORT).show();*/
-
         weixinshare(htmlUrl);
     }
 

@@ -1,9 +1,11 @@
 package com.kloudsync.techexcel.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.ArrayMap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -72,7 +74,9 @@ public class Favourite2Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         final ViewHolder holder = (ViewHolder) viewHolder;
         final Favorite favorite = mlist.get(position);
         holder.tv_favour.setText(favorite.getTitle());
-        holder.lin_favour.setOnClickListener(this);
+        holder.tv_synccount.setText(favorite.getSyncCount() + "");
+        holder.lin_sync.setVisibility((0 == favorite.getSyncCount()) ? View.GONE : View.VISIBLE);
+        holder.itemView.setOnClickListener(this);
 
         holder.itemView.setTag(position);
 
@@ -85,12 +89,16 @@ public class Favourite2Adapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tv_favour;
+        TextView tv_synccount;
         RelativeLayout lin_favour;
+        LinearLayout lin_sync;
 
         ViewHolder(View view) {
             super(view);
             tv_favour = (TextView) view.findViewById(R.id.tv_favour);
+            tv_synccount = (TextView) view.findViewById(R.id.tv_synccount);
             lin_favour = (RelativeLayout) view.findViewById(R.id.lin_favour);
+            lin_sync = (LinearLayout) view.findViewById(R.id.lin_sync);
         }
     }
 }

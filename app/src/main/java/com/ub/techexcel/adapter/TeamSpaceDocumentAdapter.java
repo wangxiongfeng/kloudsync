@@ -45,7 +45,10 @@ public class TeamSpaceDocumentAdapter extends RecyclerView.Adapter<TeamSpaceDocu
     }
 
     public interface OnItemLectureListener {
+
         void onItem(TeamSpaceBeanFile lesson, View view);
+
+        void onRealItem(TeamSpaceBeanFile lesson, View view);
 
         void share(int s, TeamSpaceBeanFile teamSpaceBeanFile);
 
@@ -77,12 +80,20 @@ public class TeamSpaceDocumentAdapter extends RecyclerView.Adapter<TeamSpaceDocu
             @Override
             public void onClick(View v) {
                 if (onItemLectureListener != null) {
+                    onItemLectureListener.onRealItem(item, holder.tv_num);
+                }
+            }
+        });
+        holder.morepopup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onItemLectureListener != null) {
                     onItemLectureListener.onItem(item, holder.tv_num);
                 }
             }
         });
-        String createData = new SimpleDateFormat("yyyy_MM_dd hh:mm:ss").format(Long.parseLong(item.getCreatedDate()));
-        holder.createdata.setText("Create Data: " + createData);
+        String createData = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(Long.parseLong(item.getCreatedDate()));
+        holder.createdata.setText("" + createData);
         holder.listView.setVisibility(View.GONE);
         int syncCount = item.getSyncCount();
         holder.tv_num_value.setText(item.getSyncCount() + "");
@@ -140,6 +151,8 @@ public class TeamSpaceDocumentAdapter extends RecyclerView.Adapter<TeamSpaceDocu
         LinearLayout syncll;
         RelativeLayout lin_favour;
         ListView listView;
+        ImageView morepopup;
+
 
         public RecycleHolder(View itemView) {
             super(itemView);
@@ -147,6 +160,7 @@ public class TeamSpaceDocumentAdapter extends RecyclerView.Adapter<TeamSpaceDocu
             tv_num_value = (TextView) itemView.findViewById(R.id.tv_num_value);
             createdata = (TextView) itemView.findViewById(R.id.createdata);
             tv_num = (ImageView) itemView.findViewById(R.id.tv_num);
+            morepopup = (ImageView) itemView.findViewById(R.id.morepopup);
             listView = (ListView) itemView.findViewById(R.id.listview);
             lin_favour = (RelativeLayout) itemView.findViewById(R.id.lin_favour);
             syncll = (LinearLayout) itemView.findViewById(R.id.syncll);
@@ -184,23 +198,35 @@ public class TeamSpaceDocumentAdapter extends RecyclerView.Adapter<TeamSpaceDocu
             final ViewHolder viewHolder;
             if (view == null) {
                 viewHolder = new ViewHolder();
-                view = LayoutInflater.from(context).inflate(R.layout.yinxiang_item, null);
+                view = LayoutInflater.from(context).inflate(R.layout.yinxiang_item3, null);
                 viewHolder.title = (TextView) view.findViewById(R.id.title);
                 viewHolder.username = (TextView) view.findViewById(R.id.username);
                 viewHolder.duration = (TextView) view.findViewById(R.id.duration);
-                viewHolder.operation = (RelativeLayout) view.findViewById(R.id.operation);
+                viewHolder.createdate = (TextView) view.findViewById(R.id.createdate);
+                viewHolder.operation = (LinearLayout) view.findViewById(R.id.operation);
                 viewHolder.image = (SimpleDraweeView) view.findViewById(R.id.image);
-                viewHolder.ll = (LinearLayout) view.findViewById(R.id.ll);
+                viewHolder.morepopup = (ImageView) view.findViewById(R.id.morepopup);
                 view.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) view.getTag();
             }
-            viewHolder.ll.setVisibility(View.GONE);
+            viewHolder.morepopup.setVisibility(View.VISIBLE);
             final SoundtrackBean soundtrackBean = list.get(position);
             viewHolder.title.setText(soundtrackBean.getTitle());
             viewHolder.username.setText(soundtrackBean.getUserName());
-            viewHolder.duration.setText(soundtrackBean.getDuration());
+
+
+            String createData = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(Long.parseLong(soundtrackBean.getCreatedDate()));
+            viewHolder.createdate.setText("" + createData);
+
+            viewHolder.duration.setText("Duration: " + soundtrackBean.getDuration());
             viewHolder.operation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+            viewHolder.morepopup.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     DocumentYinXiangPopup documentYinXiangPopup = new DocumentYinXiangPopup();
@@ -239,8 +265,19 @@ public class TeamSpaceDocumentAdapter extends RecyclerView.Adapter<TeamSpaceDocu
                         public void delete() {
                             deleteYinxiang2(soundtrackBean);
                         }
+
+                        @Override
+                        public void open() {
+                            onItemLectureListener.open();
+                        }
+
+                        @Override
+                        public void dismiss() {
+                            onItemLectureListener.dismiss();
+                        }
                     });
-                    documentYinXiangPopup.StartPop(viewHolder.title);
+                    documentYinXiangPopup.StartPop(viewHolder.title, soundtrackBean);
+
                 }
             });
             String url2 = soundtrackBean.getAvatarUrl();
@@ -256,11 +293,12 @@ public class TeamSpaceDocumentAdapter extends RecyclerView.Adapter<TeamSpaceDocu
 
         class ViewHolder {
             TextView title;
-            RelativeLayout operation;
+            LinearLayout operation;
             TextView username;
             TextView duration;
+            TextView createdate;
             SimpleDraweeView image;
-            LinearLayout ll;
+            ImageView morepopup;
         }
 
     }

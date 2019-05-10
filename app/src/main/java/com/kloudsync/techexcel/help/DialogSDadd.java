@@ -83,7 +83,7 @@ public class DialogSDadd {
 
         LinearLayoutManager manager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
         rv_sp.setLayoutManager(manager);
-        spaceAdapter = new SpaceAdapter(mContext, spacesList,false);
+        spaceAdapter = new SpaceAdapter(mContext, spacesList,false,false);
 
         spaceAdapter.setOnItemLectureListener(new SpaceAdapter.OnItemLectureListener() {
             @Override
@@ -91,6 +91,11 @@ public class DialogSDadd {
                 dialogdismissListener.PopSelect(teamSpaceBean);
                 flagad = true;
                 dlgGetWindow.dismiss();
+            }
+
+            @Override
+            public void select(TeamSpaceBean teamSpaceBean) {
+
             }
         });
         rv_sp.setAdapter(spaceAdapter);

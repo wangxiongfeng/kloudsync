@@ -21,20 +21,14 @@ import android.widget.Toast;
 import com.kloudsync.techexcel.R;
 import com.kloudsync.techexcel.config.AppConfig;
 import com.kloudsync.techexcel.docment.RenameActivity;
-import com.kloudsync.techexcel.help.DialogDeleteDocument;
-import com.kloudsync.techexcel.info.Customer;
-import com.kloudsync.techexcel.info.Space;
 import com.kloudsync.techexcel.start.LoginGet;
 import com.kloudsync.techexcel.tool.NetWorkHelp;
-import com.ub.kloudsync.activity.CreateNewTeamActivity;
-import com.ub.kloudsync.activity.SpaceDeletePopup;
-import com.ub.kloudsync.activity.SpaceDocumentsActivity;
+import com.ub.kloudsync.activity.CreateNewSpaceActivity;
 import com.ub.kloudsync.activity.SpaceSyncRoomActivity;
 import com.ub.kloudsync.activity.SwitchTeamActivity;
 import com.ub.kloudsync.activity.TeamMorePopup;
 import com.ub.kloudsync.activity.TeamPropertyActivity;
 import com.ub.kloudsync.activity.TeamSpaceBean;
-import com.ub.kloudsync.activity.TeamSpaceBeanFile;
 import com.ub.kloudsync.activity.TeamSpaceInterfaceListener;
 import com.ub.kloudsync.activity.TeamSpaceInterfaceTools;
 import com.ub.service.activity.SyncRoomActivity;
@@ -51,7 +45,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TopicFragment extends MyFragment implements View.OnClickListener, SpaceAdapter.OnItemLectureListener {
-
 
     private RecyclerView syncroomRecyclerView;
     private RelativeLayout teamRl;
@@ -80,14 +73,12 @@ public class TopicFragment extends MyFragment implements View.OnClickListener, S
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void eventGroupInfo(List<TeamSpaceBean> list) {
-
         Log.e("duang", "biubiu");
         getTeamhaha();
         spacesList.clear();
         spacesList.addAll(list);
         spaceAdapter.notifyDataSetChanged();
         getSyncRoomList();
-
     }
 
     @Override
@@ -124,6 +115,7 @@ public class TopicFragment extends MyFragment implements View.OnClickListener, S
     }
 
     private void getSyncRoomList() {
+
         TeamSpaceInterfaceTools.getinstance().getSyncRoomList(AppConfig.URL_PUBLIC + "SyncRoom/List?companyID=" + AppConfig.SchoolID + "&teamID=" + teamSpaceBean.getItemID() + "&spaceID=0",
                 TeamSpaceInterfaceTools.GETSYNCROOMLIST, new TeamSpaceInterfaceListener() {
                     @Override
@@ -167,7 +159,6 @@ public class TopicFragment extends MyFragment implements View.OnClickListener, S
 
 
     private void enterSyncroom(SyncRoomBean syncRoomBean) {
-
         Intent intent = new Intent(getActivity(), SyncRoomActivity.class);
         intent.putExtra("userid", AppConfig.UserID);
         intent.putExtra("meetingId", syncRoomBean.getItemID() + "");
@@ -180,22 +171,17 @@ public class TopicFragment extends MyFragment implements View.OnClickListener, S
         intent.putExtra("teacherid", AppConfig.UserID.replace("-", ""));
         intent.putExtra("isStartCourse", true);
         startActivity(intent);
-
     }
 
 
     private void initView(View view) {
-
         syncroomRecyclerView = (RecyclerView) view.findViewById(R.id.recycleview);
         spaceRecycleView = (RecyclerView) view.findViewById(R.id.spacerecycleview);
-
         syncroomRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         spaceRecycleView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-
-        spaceAdapter = new SpaceAdapter(getActivity(), spacesList, true);
+        spaceAdapter = new SpaceAdapter(getActivity(), spacesList, true,false);
         spaceRecycleView.setAdapter(spaceAdapter);
         spaceAdapter.setOnItemLectureListener(this);
-
         teamRl = (RelativeLayout) view.findViewById(R.id.teamrl);
         createNewSpace = (RelativeLayout) view.findViewById(R.id.createnewspace);
         switchTeam = (ImageView) view.findViewById(R.id.switchteam);
@@ -205,7 +191,6 @@ public class TopicFragment extends MyFragment implements View.OnClickListener, S
         teamRl.setOnClickListener(this);
         switchTeam.setOnClickListener(this);
         createNewSpace.setOnClickListener(this);
-
         getTeamhaha();
     }
 
@@ -220,7 +205,6 @@ public class TopicFragment extends MyFragment implements View.OnClickListener, S
 
     @Override
     public void onClick(View v) {
-        //fffff
         switch (v.getId()) {
             case R.id.teamrl:
 //                Intent intent = new Intent(getActivity(), TeamPropertyActivity.class);
@@ -236,11 +220,10 @@ public class TopicFragment extends MyFragment implements View.OnClickListener, S
                 startActivity(intent2);
                 break;
             case R.id.moreOpation:
-
                 MoreForTeam();
                 break;
             case R.id.createnewspace:
-                Intent intent3 = new Intent(getActivity(), CreateNewTeamActivity.class);
+                Intent intent3 = new Intent(getActivity(), CreateNewSpaceActivity.class);
                 if (teamSpaceBean.getItemID() != 0) {
                     intent3.putExtra("ItemID", teamSpaceBean.getItemID());
                     startActivity(intent3);
@@ -254,6 +237,7 @@ public class TopicFragment extends MyFragment implements View.OnClickListener, S
     private void MoreForTeam() {
         TeamMorePopup teamMorePopup=new TeamMorePopup();
         teamMorePopup.setIsTeam(true);
+        teamMorePopup.setTSid(teamSpaceBean.getItemID());
         teamMorePopup.getPopwindow(getActivity());
         teamMorePopup.setFavoritePoPListener(new TeamMorePopup.FavoritePoPListener() {
             @Override
@@ -282,7 +266,6 @@ public class TopicFragment extends MyFragment implements View.OnClickListener, S
                     }
                 });
                 spaceDeletePopup.StartPop(mTeamRecyclerView);*/
-
                 LoginGet lg = new LoginGet();
                 lg.setBeforeDeleteTeamListener(new LoginGet.BeforeDeleteTeamListener() {
                     @Override
@@ -304,7 +287,6 @@ public class TopicFragment extends MyFragment implements View.OnClickListener, S
 
             @Override
             public void quit() {
-
             }
 
             @Override
@@ -367,7 +349,6 @@ public class TopicFragment extends MyFragment implements View.OnClickListener, S
                         msg.obj = ErrorMessage;
                     }
                 } catch (Exception e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                     msg.what = AppConfig.NETERROR;
                 } finally {
@@ -397,6 +378,12 @@ public class TopicFragment extends MyFragment implements View.OnClickListener, S
         intent.putExtra("spaceid", teamSpaceBean2.getItemID());
         intent.putExtra("spaceName", teamSpaceBean2.getName());
         startActivity(intent);
+    }
+
+    @Override
+    public void select(TeamSpaceBean teamSpaceBean) {
+
+
     }
 
 

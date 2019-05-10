@@ -65,7 +65,6 @@ public class SyncRoomMemberPopup implements View.OnClickListener {
         }
     }
 
-
     public void initPopuptWindow() {
 
         LayoutInflater layoutInflater = LayoutInflater.from(mContext);
@@ -117,7 +116,7 @@ public class SyncRoomMemberPopup implements View.OnClickListener {
         }
     }
 
-    private final  void getAllMembers() {
+    private final void getAllMembers() {
         TeamSpaceInterfaceTools.getinstance().getMemberList(AppConfig.URL_PUBLIC + "Topic/MemberList?TeamTopicID=" + topicId,
                 TeamSpaceInterfaceTools.GETMEMBERLIST, new TeamSpaceInterfaceListener() {
                     @Override

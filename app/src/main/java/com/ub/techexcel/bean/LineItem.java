@@ -31,6 +31,15 @@ public class LineItem implements Serializable {
 
 	private int syncRoomCount;
 
+	private String createdDate;
+
+	public String getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(String createdDate) {
+		this.createdDate = createdDate;
+	}
 
 	public int getTopicId() {
 		return topicId;

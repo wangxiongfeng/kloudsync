@@ -324,7 +324,12 @@
     <string name="Create_Space">创建新的空间</string>
     <string name="Current_file">当前团队的文件</string>
     <string name="Swtich_team">切换团队</string>
+    <string name="Swtich_space">切换空间</string>
     <string name="Create_team">创建新的团队</string>
+
+
+    <string name="Select_at">选团队</string>
+    <string name="Select_af">选文件</string>
 
     <!--xfwang-->
 

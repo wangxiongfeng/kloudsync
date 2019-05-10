@@ -1,9 +1,10 @@
 package com.ub.kloudsync.activity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TeamSpaceBean {
+public class TeamSpaceBean implements Serializable {
 
     private int itemID;
     private String name;
@@ -14,7 +15,6 @@ public class TeamSpaceBean {
     private String createdByName;
     private int attachmentCount;
     private int TopicType;
-
     private int memberCount;
     private int syncRoomCount;
 

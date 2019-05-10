@@ -5,7 +5,7 @@
     <color name="typecontentcolor">#1d221c</color>
     <color name="darkblack">#0A0A0A</color>
     <!-- 深黑色 -->
-    <color name="black">#333333</color>
+    <color name="black">#000000</color>
     <color name="darkblack2">#000000</color>
     <!-- 黑色 -->
     <color name="lightblack">#45333333</color>
@@ -42,7 +42,7 @@
     <!-- 亮蓝色 -->
     <color name="lightblue3">#87ceeb</color>
     <!-- 浅天蓝色 -->
-    <color name="skyblue">#1496D2</color>
+    <color name="skyblue">#0078F9</color>
     <!-- 天蓝色 -->
     <color name="deepblue">#2b4486</color>
     <!-- 深蓝色 -->
@@ -54,7 +54,7 @@
     <!-- 浅中灰色 -->
     <color name="lightgrey">#eeeff1</color>
     <!-- 浅灰 -->
-    <color name="darkgrey">#404751</color>
+    <color name="darkgrey">#3E3F42</color>
     <!-- 暗灰色 -->
     <color name="purple">#8558A9</color>
     <!-- 紫色 -->

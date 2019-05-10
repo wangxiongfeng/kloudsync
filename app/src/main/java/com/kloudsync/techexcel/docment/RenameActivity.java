@@ -54,12 +54,14 @@ public class RenameActivity extends Activity {
                     break;
                 case AppConfig.Rename:
                     result = (String) msg.obj;
-                    sharedPreferences = getSharedPreferences(AppConfig.LOGININFO,
-                            MODE_PRIVATE);
-                    editor = sharedPreferences.edit();
-                    editor.putInt("teamid", itemID);
-                    editor.putString("teamname", et_heihei.getText().toString());
-                    editor.commit();
+                    if(isteam) {
+                        sharedPreferences = getSharedPreferences(AppConfig.LOGININFO,
+                                MODE_PRIVATE);
+                        editor = sharedPreferences.edit();
+                        editor.putInt("teamid", itemID);
+                        editor.putString("teamname", et_heihei.getText().toString());
+                        editor.commit();
+                    }
                     EventBus.getDefault().post(new TeamSpaceBean());
                     finish();
                     break;

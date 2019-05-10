@@ -2,9 +2,11 @@ package com.kloudsync.techexcel.help;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -46,11 +48,15 @@ public class DialogAddFavorite {
         window = dlgGetWindow.getWindow();
         window.setWindowAnimations(R.style.DialogAnimation);
         window.setContentView(R.layout.sendfile);
+        window.setBackgroundDrawable(new ColorDrawable(mContext.getResources().getColor(R.color.white)));
+        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
         WindowManager.LayoutParams layoutParams = dlgGetWindow.getWindow()
                 .getAttributes();
-        layoutParams.width = width * 5 / 7;
+//        layoutParams.width = width * 5 / 7;
 //        layoutParams.height = height * 2 / 3;
+//        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+//        layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
         dlgGetWindow.getWindow().setAttributes(layoutParams);
 
         rv_pc = (RecyclerView) window.findViewById(R.id.rv_pc);

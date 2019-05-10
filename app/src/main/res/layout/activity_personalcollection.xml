@@ -14,24 +14,23 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@color/main_color">
+            android:layout_height="50dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="@string/saved"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/tv_back"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:drawableLeft="@drawable/return_arrow"
+                android:padding="15dp"
+                android:drawableLeft="@drawable/return_b"
                 android:gravity="center"
-                android:text="@string/personal_center"
                 android:textColor="@color/white"
                 android:textSize="15sp" />
 

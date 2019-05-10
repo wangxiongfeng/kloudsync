@@ -33,11 +33,12 @@
                     android:textSize="16sp" />
 
                 <ImageView
+                    android:layout_centerVertical="true"
                     android:id="@+id/close"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
                     android:layout_alignParentRight="true"
-                    android:src="@drawable/btn_close" />
+                    android:src="@drawable/close" />
             </RelativeLayout>
 
             <android.support.v7.widget.RecyclerView
@@ -73,23 +74,21 @@
                 <LinearLayout
                     android:id="@+id/createyinxiang"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="35dp"
                     android:gravity="center"
                     android:orientation="horizontal"
+                    android:background="@drawable/bluewhite_back"
                     android:padding="5dp">
 
-                    <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_alignParentRight="true"
-                        android:src="@drawable/syncing" />
+
 
                     <TextView
+                        android:gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:text="Create New Sync"
-                        android:textColor="@color/skyblue"
+                        android:textColor="@color/white"
                         android:textSize="14sp" />
                 </LinearLayout>
 
@@ -105,11 +104,11 @@
 
             <ImageView
                 android:id="@+id/backimg"
-                android:layout_width="wrap_content"
+                android:layout_width="40dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:src="@drawable/arrow_back"
-                android:layout_height="wrap_content" />
+                android:src="@drawable/arrow_back2"
+                android:layout_height="30dp" />
 
             <android.support.v7.widget.RecyclerView
                 android:layout_below="@+id/backimg"

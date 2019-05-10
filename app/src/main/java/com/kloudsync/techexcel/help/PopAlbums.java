@@ -49,7 +49,11 @@ public class PopAlbums {
         tv_album2.setText("From favourite");
     }
 
-    private TextView tv_album,tv_album2, tv_cancel;
+    private TextView tv_album,tv_album2;
+    private LinearLayout lin_album1,
+            lin_album2,
+            lin_album3,
+            lin_album4;
 
     @SuppressWarnings("deprecation")
     public void initPopuptWindow() {
@@ -58,7 +62,10 @@ public class PopAlbums {
 
         tv_album = (TextView) popupWindow.findViewById(R.id.tv_album);
         tv_album2 = (TextView) popupWindow.findViewById(R.id.tv_album2);
-        tv_cancel = (TextView) popupWindow.findViewById(R.id.tv_cancel);
+        lin_album1 = (LinearLayout) popupWindow.findViewById(R.id.lin_album1);
+        lin_album2 = (LinearLayout) popupWindow.findViewById(R.id.lin_album2);
+        lin_album3 = (LinearLayout) popupWindow.findViewById(R.id.lin_album3);
+        lin_album4 = (LinearLayout) popupWindow.findViewById(R.id.lin_album4);
 
         mPopupWindow = new PopupWindow(popupWindow, LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT, false);
@@ -75,9 +82,10 @@ public class PopAlbums {
             }
         });
 
-        tv_album.setOnClickListener(new myOnClick());
-        tv_album2.setOnClickListener(new myOnClick());
-        tv_cancel.setOnClickListener(new myOnClick());
+        lin_album1.setOnClickListener(new myOnClick());
+        lin_album2.setOnClickListener(new myOnClick());
+        lin_album3.setOnClickListener(new myOnClick());
+        lin_album4.setOnClickListener(new myOnClick());
 
 
         // 使其聚焦
@@ -94,13 +102,16 @@ public class PopAlbums {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.tv_album:
+                case R.id.lin_album1:
                     DissmissPhotoPop(true);
                     break;
-                case R.id.tv_album2:
+                case R.id.lin_album2:
                     DissmissVideoPop(true);
                     break;
-                case R.id.tv_cancel:
+                case R.id.lin_album3:
+                    mPopupWindow.dismiss();
+                    break;
+                case R.id.lin_album4:
                     mPopupWindow.dismiss();
                     break;
 

@@ -32,6 +32,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 public class SyncRoomMeetingPopup implements View.OnClickListener {
@@ -43,16 +44,13 @@ public class SyncRoomMeetingPopup implements View.OnClickListener {
     private ImageView adddocument;
     private TextView upcoming, finished, inprogressunderline;
     private ViewPager mViewPager;
-
     private List<ServiceBean> mList1 = new ArrayList<>();
     private List<ServiceBean> mList2 = new ArrayList<>();
     private ListView serviceListView1;
     private ListView serviceListView2;
     private ServiceAdapter4 serviceAdapter1;
     private ServiceAdapter4 serviceAdapter2;
-
     private List<View> viewList = new ArrayList<>();
-
 
     public void getPopwindow(Context context) {
         this.mContext = context;
@@ -67,7 +65,6 @@ public class SyncRoomMeetingPopup implements View.OnClickListener {
             initPopuptWindow();
         }
     }
-
 
     public void initPopuptWindow() {
 

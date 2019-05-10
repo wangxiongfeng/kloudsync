@@ -7,12 +7,14 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.kloudsync.techexcel.R;
 import com.kloudsync.techexcel.tool.PopupWindowUtil;
+import com.ub.techexcel.bean.SoundtrackBean;
 
 /**
  * Created by wang on 2017/9/18.
@@ -29,6 +31,8 @@ public class DocumentYinXiangPopup implements View.OnClickListener {
     private LinearLayout yinxiangdelete;
     private LinearLayout yinxiangplay;
     private LinearLayout yinxiangshare;
+    private ImageView closebnt;
+    private TextView title;
 
 
     private static FavoritePoPListener mFavoritePoPListener;
@@ -40,6 +44,10 @@ public class DocumentYinXiangPopup implements View.OnClickListener {
         void edit();
 
         void delete();
+
+        void open();
+
+        void  dismiss();
 
     }
 
@@ -72,15 +80,18 @@ public class DocumentYinXiangPopup implements View.OnClickListener {
         yinxiangdelete = (LinearLayout) view.findViewById(R.id.yinxiangdelete);
         yinxiangplay = (LinearLayout) view.findViewById(R.id.yinxiangplay);
         yinxiangshare = (LinearLayout) view.findViewById(R.id.yinxiangshare);
+        title = (TextView) view.findViewById(R.id.title);
+        closebnt = (ImageView) view.findViewById(R.id.closebnt);
 
         yinxiangedit.setOnClickListener(this);
         yinxiangdelete.setOnClickListener(this);
         yinxiangplay.setOnClickListener(this);
         yinxiangshare.setOnClickListener(this);
+        closebnt.setOnClickListener(this);
 
         yinxiangplay.setVisibility(View.GONE);
 
-        mPopupWindow = new PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT,
+        mPopupWindow = new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT, false);
         mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
@@ -90,16 +101,19 @@ public class DocumentYinXiangPopup implements View.OnClickListener {
         });
         mPopupWindow.setFocusable(true);
         mPopupWindow.setOutsideTouchable(true);
+        mPopupWindow.setAnimationStyle(R.style.dialogwindowAnim);
         mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
     }
 
 
     @SuppressLint("NewApi")
-    public void StartPop(View v) {
+    public void StartPop(View v, SoundtrackBean soundtrackBean) {
         if (mPopupWindow != null) {
 //            mPopupWindow.showAsDropDown(v);
-            int windowPos[] = PopupWindowUtil.calculatePopWindowPos(v, view, 100);
-            mPopupWindow.showAtLocation(v, Gravity.TOP | Gravity.START, windowPos[0], windowPos[1]);
+//            int windowPos[] = PopupWindowUtil.calculatePopWindowPos(v, view, 100);
+            title.setText(soundtrackBean.getTitle());
+            mPopupWindow.showAtLocation(v, Gravity.BOTTOM, 0, 0);
+            mFavoritePoPListener.open();
         }
     }
 
@@ -109,6 +123,7 @@ public class DocumentYinXiangPopup implements View.OnClickListener {
 
     public void dismiss() {
         if (mPopupWindow != null) {
+            mFavoritePoPListener.dismiss();
             mPopupWindow.dismiss();
         }
     }
@@ -132,7 +147,9 @@ public class DocumentYinXiangPopup implements View.OnClickListener {
                 dismiss();
                 mFavoritePoPListener.edit();
                 break;
-
+            case R.id.closebnt:
+                dismiss();
+                break;
             default:
                 break;
         }

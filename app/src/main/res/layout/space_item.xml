@@ -4,7 +4,6 @@
     android:layout_height="50dp">
 
     <RelativeLayout
-
         android:id="@+id/spacerelativelayout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -15,45 +14,72 @@
             android:id="@+id/tv_sort"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:gravity="center"
             android:layout_centerVertical="true"
-            android:textColor="@color/white"
-            android:background="@drawable/circle_expand" />
+            android:background="@drawable/orange_cicle"
+            android:gravity="center"
+            android:textColor="@color/white" />
 
-        <TextView
-            android:id="@+id/name"
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/tv_sort"
-            android:text="Sample space1"
-            android:textColor="@color/black" />
+            android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="Sample space1" />
+
+
+            <RelativeLayout
+                android:id="@+id/countrl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="5dp">
+
+                <TextView
+                    android:id="@+id/attachmentcount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="gggg"
+                    android:textColor="@color/newgrey"
+                    android:textSize="12sp" />
+
+
+                <TextView
+                    android:id="@+id/syncroomcount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ddd"
+                    android:textColor="@color/newgrey"
+                    android:textSize="12sp" />
+            </RelativeLayout>
+        </LinearLayout>
+
+
+        <ImageView
+            android:id="@+id/selectimage"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="" />
+            android:layout_marginRight="2dp"
+            android:src="@drawable/check"
+            android:visibility="gone" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:layout_alignParentBottom="true"
             android:background="@color/divider_line" />
-        <TextView
-            android:id="@+id/attachmentcount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"/>
-        <TextView
-            android:id="@+id/syncroomcount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"/>
+
+
     </RelativeLayout>
 
 </LinearLayout>

@@ -6,8 +6,7 @@
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:background="@color/main_color">
+        android:layout_height="50dp">
 
         <TextView
             android:id="@+id/tv_title"
@@ -15,7 +14,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="@string/service"
-            android:textColor="#fff"
+            android:textColor="@color/black"
             android:textSize="18sp" />
 
         <ImageView
@@ -35,8 +34,8 @@
                 android:id="@+id/img_notice"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:padding="10dp"
-                android:src="@drawable/return_arrow" />
+                android:padding="15dp"
+                android:src="@drawable/arrow_back2" />
         </RelativeLayout>
 
     </RelativeLayout>
@@ -46,19 +45,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:background="@color/lightgrey"
         android:paddingBottom="5dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:paddingTop="5dp">
 
-        <TextView
-            android:id="@+id/tv_fs"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:textColor="@color/white"
-            android:gravity="center"
-            android:background="@drawable/circle_expand"/>
+        <ImageView
+            android:id="@+id/img_switch"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:padding="7dp"
+            android:src="@drawable/fanzhuang" />
 
         <TextView
             android:id="@+id/teamspacename"
@@ -66,18 +65,20 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@id/tv_fs"
+            android:layout_toRightOf="@id/img_switch"
             android:text="Medical team of Beijing hospital"
             android:textColor="@color/black" />
+
 
         <ImageView
             android:id="@+id/switchteam"
             android:layout_width="30dp"
-            android:padding="7dp"
             android:layout_height="30dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/arrow2" />
+            android:padding="7dp"
+            android:src="@drawable/more_favor" />
+
 
     </RelativeLayout>
 
@@ -92,11 +93,17 @@
         android:text="Latest Documents"
         android:textColor="@color/skyblue" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycleview"
+
+    <com.aohanyao.jelly.library.BouncingJellyView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="10dp"></android.support.v7.widget.RecyclerView>
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycleview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp"></android.support.v7.widget.RecyclerView>
 
 
+    </com.aohanyao.jelly.library.BouncingJellyView>
 </LinearLayout>

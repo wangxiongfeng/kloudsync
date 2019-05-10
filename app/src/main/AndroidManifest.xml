@@ -314,6 +314,9 @@
             android:windowSoftInputMode="stateHidden|adjustPan"
             android:screenOrientation="portrait" />
         <activity
+        android:name=".docment.EditTeamActivity"
+        android:screenOrientation="portrait" />
+        <activity
             android:name=".dialog.plugin.SingleCallActivity2"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -591,9 +594,15 @@
         <activity
             android:name="com.ub.kloudsync.activity.CreateNewTeamActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name="com.ub.kloudsync.activity.CreateNewSpaceActivity"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name="com.ub.kloudsync.activity.SwitchTeamActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.ub.kloudsync.activity.SwitchSpaceActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.ub.kloudsync.activity.SpacePropertyActivity"
