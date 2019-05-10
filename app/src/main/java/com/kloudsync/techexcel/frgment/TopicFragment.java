@@ -96,6 +96,8 @@ public class TopicFragment extends MyFragment implements View.OnClickListener, S
                 isLoadDataFinish = true;
                 getSpaceList();
                 getSyncRoomList();
+
+
             }
         }
     }
@@ -287,6 +289,7 @@ public class TopicFragment extends MyFragment implements View.OnClickListener, S
 
             @Override
             public void quit() {
+
             }
 
             @Override
