@@ -3,6 +3,7 @@ package com.ub.kloudsync.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,13 +16,22 @@ import android.widget.TextView;
 
 import com.kloudsync.techexcel.R;
 import com.kloudsync.techexcel.config.AppConfig;
+import com.kloudsync.techexcel.help.DialogRename;
+import com.kloudsync.techexcel.info.Customer;
+import com.kloudsync.techexcel.info.Space;
+import com.kloudsync.techexcel.service.ConnectService;
+import com.kloudsync.techexcel.start.LoginGet;
+import com.kloudsync.techexcel.tool.NetWorkHelp;
 import com.ub.service.activity.SyncRoomActivity;
 import com.ub.techexcel.adapter.SyncRoomAdapter;
+import com.ub.techexcel.bean.LineItem;
 import com.ub.techexcel.bean.SyncRoomBean;
+import com.ub.techexcel.tools.FileUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,12 +42,13 @@ public class SpaceSyncRoomActivity extends Activity implements View.OnClickListe
     private int teamId, spaceId;
     private String spaceName;
     private TextView teamspacename;
-    private TextView tv_fs;
+    private ImageView tv_fs;
     private ImageView img_back;
     private ImageView adddocument;
     private RelativeLayout teamRl;
     private SyncRoomAdapter syncRoomAdapter;
     private RelativeLayout createnewsyncroom;
+    private ImageView switchteam;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,16 +74,13 @@ public class SpaceSyncRoomActivity extends Activity implements View.OnClickListe
         syncroomRecyclerView = (RecyclerView) findViewById(R.id.recycleview);
         syncroomRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         teamspacename = (TextView) findViewById(R.id.teamspacename);
-        tv_fs = (TextView) findViewById(R.id.tv_fs);
+        tv_fs = (ImageView) findViewById(R.id.tv_fs);
         createnewsyncroom = (RelativeLayout) findViewById(R.id.createnewsyncroom);
         createnewsyncroom.setOnClickListener(this);
-
         teamspacename.setText(spaceName);
-        if (!TextUtils.isEmpty(spaceName)) {
-            tv_fs.setText(spaceName.substring(0, 1));
-        }
-
         img_back = (ImageView) findViewById(R.id.img_notice);
+        switchteam = (ImageView) findViewById(R.id.switchteam);
+        switchteam.setOnClickListener(this);
         adddocument = (ImageView) findViewById(R.id.adddocument);
         teamRl = (RelativeLayout) findViewById(R.id.teamrl);
         teamRl.setOnClickListener(this);
@@ -152,14 +160,83 @@ public class SpaceSyncRoomActivity extends Activity implements View.OnClickListe
                 startActivity(intent);
                 break;
             case R.id.teamrl:
-                Intent intent2 = new Intent(this, SpacePropertyActivity.class);
+                Intent intent2 = new Intent(this, SwitchSpaceActivity.class);
                 intent2.putExtra("ItemID", spaceId);
-                startActivity(intent2);
+                intent2.putExtra("isSyncRoom",true);
+                startActivityForResult(intent2, REQUEST_CODE_CHANGESPACE);
                 break;
             case R.id.img_notice:
                 finish();
                 break;
+            case R.id.switchteam:
+                ShowMorePop();
+                break;
         }
+    }
+
+
+    public static final int REQUEST_CODE_CHANGESPACE = 1;
+    private TeamSpaceBean selectSpace;
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE_CHANGESPACE) {
+            if (resultCode == RESULT_OK) {
+                selectSpace = (TeamSpaceBean) data.getSerializableExtra("selectSpace");
+                if (spaceId != selectSpace.getItemID()) {
+                    spaceId = selectSpace.getItemID();
+                    getSyncRoomList();
+                }
+            }
+
+        }
+    }
+
+
+    private void ShowMorePop() {
+
+        TeamMorePopup teamMorePopup = new TeamMorePopup();
+        teamMorePopup.setIsTeam(false);
+        teamMorePopup.setTSid(spaceId);
+        teamMorePopup.getPopwindow(this);
+        teamMorePopup.setFavoritePoPListener(new TeamMorePopup.FavoritePoPListener() {
+            @Override
+            public void dismiss() {
+                getWindow().getDecorView().setAlpha(1.0f);
+            }
+
+            @Override
+            public void open() {
+                getWindow().getDecorView().setAlpha(0.5f);
+            }
+
+            @Override
+            public void delete() {
+//                DeleteSpace();
+            }
+
+            @Override
+            public void rename() {
+//                GotoRename();
+                DialogRename dr = new DialogRename();
+                dr.EditCancel(SpaceSyncRoomActivity.this, spaceId, false);
+            }
+
+            @Override
+            public void quit() {
+                finish();
+            }
+
+            @Override
+            public void edit() {
+                Intent intent2 = new Intent(SpaceSyncRoomActivity.this, SpacePropertyActivity.class);
+                intent2.putExtra("ItemID", spaceId);
+                startActivity(intent2);
+            }
+        });
+
+        teamMorePopup.StartPop(switchteam);
     }
 
 
