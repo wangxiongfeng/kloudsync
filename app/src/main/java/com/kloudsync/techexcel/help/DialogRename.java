@@ -82,7 +82,7 @@ public class DialogRename {
         dlgGetWindow.setView(new EditText(mContext));
         dlgGetWindow.show();
         window = dlgGetWindow.getWindow();
-        window.setWindowAnimations(R.style.PopupAnimation3);
+        window.setWindowAnimations(R.style.PopupAnimation2);
         window.setContentView(R.layout.dialog_rename);
 
         dlgGetWindow.setOnDismissListener(new DialogInterface.OnDismissListener() {

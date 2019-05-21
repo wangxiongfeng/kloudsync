@@ -295,7 +295,7 @@ public class SelectCourseActivity extends Activity implements View.OnClickListen
                         JSONObject js = new JSONObject();
                         js.put("LessonID", lesson.getLessonId());
                         js.put("CourseID", courseLesson.getCourseID());
-                        js.put("Title", lesson.getLessonId());
+                        js.put("Title", lesson.getTitle());
                         js.put("Description", lesson.getDescription());
                         js.put("LectureIDs", lecs);
                         js.put("StartDate", lesson.getStartData());
@@ -306,8 +306,8 @@ public class SelectCourseActivity extends Activity implements View.OnClickListen
                         JSONObject j = new JSONObject();
                         j.put("MemberID", student.getCustomer().getUserID());
                         j.put("Role", 1);
-                        JSONObject j2 = new JSONObject();
 
+                        JSONObject j2 = new JSONObject();
                         j2.put("MemberID", AppConfig.UserID);
                         j2.put("Role", 2);
                         JSONArray jsonArray = new JSONArray();

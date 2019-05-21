@@ -523,6 +523,7 @@
     <string name="health_title">添加与管理</string>
     <string name="agora_app_id">35e57a3e1425470b9532a66d5dcc10b7</string>
     <string name="currentpath">Current Path :</string>
+    <string name="addnewdoc">添加新的文档</string>
 
 
 </resources>

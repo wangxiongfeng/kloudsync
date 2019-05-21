@@ -7,6 +7,17 @@
         <attr name="border_color" format="color" />
     </declare-styleable>
 
+
+    <!-- 倒圆角 -->
+    <declare-styleable name="RoundImageView">
+        <attr name="Round_coner" format="dimension" />
+        <attr name="Round_color" format="color" />
+        <attr name="left_top" format="boolean" />
+        <attr name="left_bottom" format="boolean" />
+        <attr name="right_top" format="boolean" />
+        <attr name="right_bottom" format="boolean" />
+    </declare-styleable>
+
      <!-- 我的积分加载框 -->
          <declare-styleable name="RoundProgressBar">  
         <attr name="roundColor" format="color"/>

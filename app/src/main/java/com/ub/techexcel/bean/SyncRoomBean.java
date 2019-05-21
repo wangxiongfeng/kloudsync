@@ -1,6 +1,8 @@
 package com.ub.techexcel.bean;
 
-public class SyncRoomBean {
+import java.io.Serializable;
+
+public class SyncRoomBean implements Serializable {
 
 
 

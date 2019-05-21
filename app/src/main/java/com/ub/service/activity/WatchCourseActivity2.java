@@ -67,6 +67,25 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.sdk.android.oss.ClientConfiguration;
+import com.alibaba.sdk.android.oss.ClientException;
+import com.alibaba.sdk.android.oss.OSS;
+import com.alibaba.sdk.android.oss.OSSClient;
+import com.alibaba.sdk.android.oss.ServiceException;
+import com.alibaba.sdk.android.oss.callback.OSSCompletedCallback;
+import com.alibaba.sdk.android.oss.callback.OSSProgressCallback;
+import com.alibaba.sdk.android.oss.common.OSSLog;
+import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
+import com.alibaba.sdk.android.oss.common.auth.OSSStsTokenCredentialProvider;
+import com.alibaba.sdk.android.oss.model.OSSRequest;
+import com.alibaba.sdk.android.oss.model.PutObjectRequest;
+import com.alibaba.sdk.android.oss.model.PutObjectResult;
+import com.amazonaws.auth.BasicSessionCredentials;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.kloudsync.techexcel.R;
 import com.kloudsync.techexcel.app.App;
 import com.kloudsync.techexcel.config.AppConfig;
@@ -74,8 +93,10 @@ import com.kloudsync.techexcel.help.PopAlbums;
 import com.kloudsync.techexcel.help.Popupdate;
 import com.kloudsync.techexcel.help.Popupdate2;
 import com.kloudsync.techexcel.httpgetimage.ImageLoader;
+import com.kloudsync.techexcel.info.ConvertingResult;
 import com.kloudsync.techexcel.info.Customer;
 import com.kloudsync.techexcel.info.Favorite;
+import com.kloudsync.techexcel.info.Uploadao;
 import com.kloudsync.techexcel.service.ConnectService;
 import com.kloudsync.techexcel.start.LoginGet;
 import com.kloudsync.techexcel.tool.Md5Tool;
@@ -186,6 +207,7 @@ import io.rong.message.TextMessage;
 public class WatchCourseActivity2 extends BaseActivity implements View.OnClickListener, AGEventHandler, VideoGestureRelativeLayout.VideoGestureListener {
 
     private String targetUrl;
+    private String newPath;
     public PopupWindow mPopupWindow1;
     public PopupWindow documentPopupWindow;
     public PopupWindow chatPopupWindow;
@@ -496,32 +518,7 @@ public class WatchCourseActivity2 extends BaseActivity implements View.OnClickLi
                                 @Override
                                 public void onItemClick(int position) {
                                     if (activity.isHavePresenter()) {
-//                                        if (activity.isAgoraRecord) {
-//                                            activity.stopAgoraRecording(false);
-//                                        } else {
-//                                            activity.currentAttachmentPage = "0";
-//                                            AppConfig.currentPageNumber = "0";
-//                                            for (int i = 0; i < activity.documentList.size(); i++) {
-//                                                activity.documentList.get(i).setSelect(false);
-//                                            }
-//                                            activity.lineItem = activity.documentList.get(position);
-//                                            activity.lineItem.setSelect(true);
-//                                            activity.myRecyclerAdapter2.notifyDataSetChanged();
-//                                            activity.currentAttachmentId = activity.lineItem.getAttachmentID();
-//                                            activity.currentAttachmentId2 = activity.lineItem.getAttachmentID2();
-//                                            activity.currentBlankPageNumber = activity.lineItem.getBlankPageNumber();
-//                                            activity.targetUrl = activity.lineItem.getUrl();
-//                                            activity.isHtml = activity.lineItem.isHtml5();
-//                                            activity.runOnUiThread(new Runnable() {
-//                                                @Override
-//                                                public void run() {
-//                                                    activity.wv_show.load("file:///android_asset/index.html", null);
-//                                                }
-//                                            });
-//                                            activity.notifySwitchDocumentSocket(activity.lineItem, "1");
-//                                            //重新开始录制
-//                                            activity.startAgoraRecording();
-//                                        }
+
                                         activity.currentAttachmentPage = "0";
                                         AppConfig.currentPageNumber = "0";
                                         for (int i = 0; i < activity.documentList.size(); i++) {
@@ -533,7 +530,7 @@ public class WatchCourseActivity2 extends BaseActivity implements View.OnClickLi
                                         activity.currentAttachmentId = activity.lineItem.getAttachmentID();
                                         activity.currentAttachmentId2 = activity.lineItem.getAttachmentID2();
                                         activity.currentBlankPageNumber = activity.lineItem.getBlankPageNumber();
-                                        activity.targetUrl = activity.lineItem.getUrl();
+                                        activity.targetUrl = activity.lineItem.getUrl();  activity.newPath = activity.lineItem.getNewPath();
                                         activity.isHtml = activity.lineItem.isHtml5();
                                         activity.runOnUiThread(new Runnable() {
                                             @Override
@@ -821,7 +818,7 @@ public class WatchCourseActivity2 extends BaseActivity implements View.OnClickLi
                 myRecyclerAdapter2.notifyDataSetChanged();
                 currentAttachmentId = documentList.get(0).getAttachmentID();
                 currentAttachmentId2 = documentList.get(0).getAttachmentID2();
-                targetUrl = documentList.get(0).getUrl();
+                targetUrl = documentList.get(0).getUrl();  newPath = documentList.get(0).getNewPath();
                 currentBlankPageNumber = documentList.get(0).getBlankPageNumber();
                 isHtml = documentList.get(0).isHtml5();
                 runOnUiThread(new Runnable() {
@@ -842,7 +839,7 @@ public class WatchCourseActivity2 extends BaseActivity implements View.OnClickLi
                 myRecyclerAdapter2.notifyDataSetChanged();
                 currentAttachmentId = lineItem.getAttachmentID();
                 currentAttachmentId2 = lineItem.getAttachmentID2();
-                targetUrl = lineItem.getUrl();
+                targetUrl = lineItem.getUrl();  newPath = lineItem.getNewPath();
                 currentBlankPageNumber = lineItem.getBlankPageNumber();
                 isHtml = lineItem.isHtml5();
                 runOnUiThread(new Runnable() {
@@ -2763,145 +2760,49 @@ public class WatchCourseActivity2 extends BaseActivity implements View.OnClickLi
 
     private Popupdate2 puo2;
 
-    /**
-     * 加载PDF或PPT
-     */
-//    @org.xwalk.core.JavascriptInterface
-//    public void afterLoadPageFunction() {
-//        Log.e("webview-afterLoadPage", "afterLoadPageFunction");
-//        if (TextUtils.isEmpty(targetUrl)) {
-//            return;
-//        }
-//        if (currentAttachmentPage.equals("0")) {
-//            currentAttachmentPage = "1";
-//        }
-//        FileUtils fileUtils = new FileUtils(WatchCourseActivity2.this);
-//        final String sourceName = targetUrl.substring(targetUrl.lastIndexOf("/") + 1);
-//        String newName = "";
-//        if (!TextUtils.isEmpty(sourceName)) {
-//            int houzuiindex = sourceName.lastIndexOf(".");
-//            String houzui = sourceName.substring(houzuiindex);
-//            String baseurl = null;
-//            try {
-//                baseurl = EncoderByMd5(targetUrl);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//            newName = baseurl + houzui;
-//            newName = newName.replaceAll("/", "_");
-//        }
-//
-//        File fileUtils1 = new File(fileUtils.getStorageDirectory());
-//        if (!fileUtils1.exists()) {
-//            fileUtils1.mkdir(); //创建目录
-//        }
-//        File fileUtils2 = new File(fileUtils.getStorageDirectory2());
-//        if (!fileUtils2.exists()) {
-//            fileUtils2.mkdir();  //创建目录
-//        }
-//
-//        final String fileLocalUrl = fileUtils.getStorageDirectory() + File.separator + meetingId + "_" + newName;  //template  address
-//        final String fileLocalUrl2 = fileUtils.getStorageDirectory2() + File.separator + meetingId + "_" + newName; //pdf address
-//        if (puo2 != null) {
-//            puo2.DissmissPop();
-//        }
-//        if (fileUtils.isFileExists(fileLocalUrl2)) {
-//            if (httpHandler != null) {
-//                httpHandler.cancel();
-//                httpHandler = null;
-//            }
-//            Log.e("webview-downloadPdf", " 本地文件存在  show pdf 地址  " + fileLocalUrl2 + " currentAttachmentPage= " + currentAttachmentPage + "   currentBlankPageNumber= " + currentBlankPageNumber);
-//            runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    if (wv_show != null) {
-//                        wv_show.load("javascript:ShowPDF('" + fileLocalUrl2 + "', " + currentAttachmentPage + ",'')", null);
-//                        wv_show.load("javascript:Record()", null);
-//                    }
-//                }
-//            });
-//        } else {
-//            if (puo2 == null) {
-//                puo2 = new Popupdate2();
-//                puo2.getPopwindow(WatchCourseActivity2.this);
-//            }
-//            if (httpHandler != null) {
-//                httpHandler.cancel();
-//                httpHandler = null;
-//                puo2.DissmissPop();
-//            }
-//            HttpUtils httpUtils = getInstance(WatchCourseActivity2.this);
-//            httpHandler = httpUtils.download(targetUrl, fileLocalUrl, true, true,  // 过程中
-//                    new RequestCallBack<File>() {
-//                        @Override
-//                        public void onStart() {
-//                            puo2.StartPop(wv_show);
-//                            super.onStart();
-//                        }
-//
-//                        @Override
-//                        public void onLoading(long total, long current,
-//                                              boolean isUploading) {
-//                            puo2.setProgress(total, current);
-//                            super.onLoading(total, current, isUploading);
-//                        }
-//
-//                        @Override
-//                        public void onSuccess(ResponseInfo<File> arg0) {
-//                            if (puo2 != null) {
-//                                puo2.DissmissPop();
-//                            }
-//                            Log.e("webview-downloadPdf", " 下载成功  show pdf 地址  " + fileLocalUrl);
-//                            new Thread(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    int retcode = Tools.copyFileSdCard(fileLocalUrl, fileLocalUrl2);
-//                                    if (retcode == 0) {
-//                                        Message message = Message.obtain();
-//                                        message.obj = "javascript:ShowPDF('" + fileLocalUrl2 + "', " + currentAttachmentPage + ",'')";
-//                                        message.what = 0x6115;
-//                                        handler.sendMessage(message);
-//                                    }
-//                                }
-//                            }).start();
-//                        }
-//
-//                        @Override
-//                        public void onFailure(HttpException arg0, String arg1) {
-//                            if (puo2 != null) {
-//                                puo2.DissmissPop();
-//                            }
-//                            Toast.makeText(WatchCourseActivity2.this, arg1, Toast.LENGTH_LONG).show();
-//                        }
-//
-//                        @Override
-//                        public void onCancelled() {
-//                            if (puo2 != null) {
-//                                puo2.DissmissPop();
-//                            }
-//                            super.onCancelled();
-//                        }
-//                    });
-//
-//        }
-//    }
+
 
     /**
      * 加载PDF
      */
     @JavascriptInterface
     public void afterLoadPageFunction() {
-        Log.e("webview-afterLoadPage", "afterLoadPageFunction");
         crpage = (int) Float.parseFloat(currentAttachmentPage);
+        Log.e("当前文档信息", "url  " + targetUrl + "        " + crpage + "      newpath  " + newPath);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (crpage == 0) {
-                    downloadPdf(targetUrl, 1);
-                } else {
-                    downloadPdf(targetUrl, crpage);
-                    crpage = 0;
-                }
+                //1  拿 Bucket 信息
+                LoginGet lg = new LoginGet();
+                lg.setprepareUploadingGetListener(new LoginGet.prepareUploadingGetListener() {
+                    @Override
+                    public void getUD(final Uploadao ud) {
+                        // 2 调queryDownloading接口
+                        ServiceInterfaceTools.getinstance().queryDownloading(AppConfig.URL_LIVEDOC + "queryDownloading", ServiceInterfaceTools.QUERYDOWNLOADING, ud,
+                                newPath, new ServiceInterfaceListener() {
+                                    @Override
+                                    public void getServiceReturnData(Object object) {
+                                        // https://peertime.oss-cn-shanghai.aliyuncs.com/P49/Attachment/D24708/6c14adea-be5d-4237-83eb-9dee293b3bf1_<1>.jpg
+                                        //拼接  url
+                                        String filename = targetUrl.substring(targetUrl.lastIndexOf("/") + 1);
+                                        if (1 == ud.getServiceProviderId()) {
+                                            targetUrl = "https://s3." + ud.getRegionName() + ".amazonaws.com/" + ud.getBucketName() + "/" + newPath + "/" + filename;
+                                        } else if (2 == ud.getServiceProviderId()) {
+                                            targetUrl = "https://" + ud.getBucketName() + "." + ud.getRegionName() + "." + "aliyuncs.com" + "/" + newPath + "/" + filename;
+                                        }
+                                        Log.e("当前文档信息", "url  " + targetUrl);
+                                        if (crpage == 0) {
+                                            downloadPdf(targetUrl, 1);
+                                        } else {
+                                            downloadPdf(targetUrl, crpage);
+                                            crpage = 0;
+                                        }
+                                    }
+                                });
+                    }
+                });
+                lg.GetprepareUploading(WatchCourseActivity2.this);
+
             }
         });
 
@@ -3587,7 +3488,7 @@ public class WatchCourseActivity2 extends BaseActivity implements View.OnClickLi
             myRecyclerAdapter2.notifyDataSetChanged();
             currentAttachmentId = lineItem.getAttachmentID();
             currentAttachmentId2 = lineItem.getAttachmentID2();
-            targetUrl = lineItem.getUrl();
+            targetUrl = lineItem.getUrl();  newPath = lineItem.getNewPath();
             currentBlankPageNumber = lineItem.getBlankPageNumber();
             isHtml = lineItem.isHtml5();
 
@@ -6340,6 +6241,7 @@ public class WatchCourseActivity2 extends BaseActivity implements View.OnClickLi
                     item.setHtml5(false);
                     item.setAttachmentID(lineitem.getString("AttachmentID"));
                     item.setBlankPageNumber(lineitem.getString("BlankPageNumber"));
+
                     videoList.add(item);
                 }
                 handler.sendEmptyMessage(0x2105);
@@ -6415,6 +6317,7 @@ public class WatchCourseActivity2 extends BaseActivity implements View.OnClickLi
                         item.setHtml5(false);
                         item.setAttachmentID(lineitem.getString("ItemID"));
                         item.setAttachmentID2(lineitem.getString("AttachmentID"));
+                        item.setNewPath(lineitem.getString("NewPath"));
                         item.setFlag(0);
                         if (lineitem.getInt("Status") == 0) {
                             items.add(item);
@@ -6766,71 +6669,14 @@ public class WatchCourseActivity2 extends BaseActivity implements View.OnClickLi
 
     }
 
-
-    /**
-     * 修改上传的文件名
-     */
-    private void popDialog(final LineItem attachmentBean, final boolean isVideo) {
-
-        final Dialog passdDialog = new Dialog(this);
-        View view2 = LayoutInflater.from(this).inflate(
-                R.layout.personinfoeditdialog, null);
-        TextView title = (TextView) view2.findViewById(R.id.title);
-        title.setText(getString(R.string.editdocumentname));
-        final EditText editText = (EditText) view2
-                .findViewById(R.id.editcontent);
-
-        if (!TextUtils.isEmpty(attachmentBean.getFileName())) {
-            String name;
-            if (attachmentBean.getFileName().lastIndexOf(".") > 0) {
-                name = attachmentBean.getFileName().substring(0,
-                        attachmentBean.getFileName().lastIndexOf("."));
-            } else {
-                name = attachmentBean.getFileName();
-            }
-            editText.setText(name);
-            editText.setSelection(name.length());
-        }
-        TextView cancel = (TextView) view2.findViewById(R.id.cancel);
-        TextView save = (TextView) view2.findViewById(R.id.save);
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                passdDialog.dismiss();
-            }
-        });
-        save.setOnClickListener(new View.OnClickListener() {
-            String houzui = "";
-
-            @Override
-            public void onClick(View arg0) {
-                String content = editText.getText().toString();
-                String sourceFileName = attachmentBean.getFileName();
-                if (sourceFileName.lastIndexOf(".") > 0) {
-                    houzui = sourceFileName.substring(sourceFileName
-                            .lastIndexOf("."));
-                }
-                attachmentBean.setFileName(content + houzui);
-                passdDialog.dismiss();
-                uploadFile2(attachmentBean, isVideo, false);
-            }
-        });
-        passdDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        passdDialog.setContentView(view2);
-        Window dlgWindow = passdDialog.getWindow();
-        dlgWindow.setGravity(Gravity.CENTER);
-        WindowManager m = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-        Display d = m.getDefaultDisplay();
-        WindowManager.LayoutParams p = dlgWindow.getAttributes();
-        p.width = (int) (d.getWidth() * 0.8);
-        dlgWindow.setAttributes(p);
-        passdDialog.setCanceledOnTouchOutside(false);
-        passdDialog.show();
-
-    }
+    private boolean isAddToFavorite;
+    String targetFolderKey;
+    int field;
 
     private void UploadFileWithHash(final LineItem attachmentBean, final boolean isVideo, final boolean isAddToFavorite) {
+        this.isAddToFavorite = isAddToFavorite;
 
+        Log.e("UploadFileWithHash", "UploadFileWithHash" + "");
         final JSONObject jsonobject = null;
         String url = null;
         File file = new File(attachmentBean.getUrl());
@@ -6839,10 +6685,9 @@ public class WatchCourseActivity2 extends BaseActivity implements View.OnClickLi
             try {
                 url = AppConfig.URL_PUBLIC + "EventAttachment/UploadFileWithHash?LessonID=" + meetingId + "&Title="
                         + URLEncoder.encode(LoginGet.getBase64Password(title), "UTF-8") +
-                        /*"&schoolID=" +
-                        SchoolID +*/
                         "&Hash=" +
                         Md5Tool.getMd5ByFile(file);
+                Log.e("UploadFileWithHash", url + "");
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
@@ -6859,7 +6704,10 @@ public class WatchCourseActivity2 extends BaseActivity implements View.OnClickLi
                         if (retcode.equals(AppConfig.RIGHT_RETCODE)) {  //刷新
                             msg.what = AppConfig.DELETESUCCESS;
                         } else if (retcode.equals(AppConfig.Upload_NoExist + "")) { // 添加
-                            uploadFile2(attachmentBean, isVideo, isAddToFavorite);
+                            JSONObject jsonObject = responsedata.getJSONObject("RetData");
+                            targetFolderKey = jsonObject.getString("Path");
+                            field = jsonObject.getInt("FileID");
+                            uploadFile2(attachmentBean, isVideo);
                         } else if (retcode.equals(AppConfig.Upload_Exist + "")) { //不要重复上传
                             msg.what = AppConfig.FAILED;
                             String ErrorMessage = responsedata
@@ -6880,143 +6728,270 @@ public class WatchCourseActivity2 extends BaseActivity implements View.OnClickLi
     }
 
 
-    private String fileNamebase;
     private HttpHandler httpHandler;
     private List<LineItem> uploadList = new ArrayList<>();
 
-    public void uploadFile2(final LineItem attachmentBean, final boolean isVideo, boolean isAddToFavorite) {
-
-        String fileName = attachmentBean.getFileName();
-        attachmentBean.setFileName(fileName.replace(" ", "_"));
-        RequestParams params = new RequestParams();
-        params.setHeader("UserToken", AppConfig.UserToken);
-        if (isVideo) {
-            params.addBodyParameter("Content-Type", "video/mpeg4");// 设定传送的内容类型
-        } else {
-            params.addBodyParameter("Content-Type", "multipart/form-data");// 设定传送的内容类型
-        }
-        // params.setContentType("application/octet-stream");
-        File file = new File(attachmentBean.getUrl());
-        if (file.exists()) {
-            String name = attachmentBean.getFileName();
-            Log.e("filename----",
-                    name + "      文件大小 " + file.length());
-            params.addBodyParameter(name, file);
-            String url = null;
-            try {
-                String baseurl = LoginGet.getBase64Password(name);
-                fileNamebase = URLEncoder.encode(baseurl, "UTF-8");
-                url = AppConfig.URL_PUBLIC + "EventAttachment/UploadFile?LessonID=" + meetingId + "&Title=" + fileNamebase + "&Hash=" + Md5Tool.getMd5ByFile(file) + "&IsAddToFavorite=" + (isAddToFavorite ? 1 : 0);
-                Log.e("URRRRRRRRRL", url);
-
-            } catch (Exception e) {
-                e.printStackTrace();
+    public void uploadFile2(final LineItem attachmentBean, final boolean isVideo) {
+        LoginGet lg = new LoginGet();
+        lg.setprepareUploadingGetListener(new LoginGet.prepareUploadingGetListener() {
+            @Override
+            public void getUD(Uploadao ud) {
+                if (1 == ud.getServiceProviderId()) {
+                    uploadWithTransferUtility(attachmentBean, ud);
+                } else if (2 == ud.getServiceProviderId()) {
+                    initOSS(attachmentBean, ud);
+                }
             }
-            Log.e("url", url);
-            HttpUtils http = new HttpUtils();
-            http.configResponseTextCharset("UTF-8");
-            httpHandler = http.send(HttpRequest.HttpMethod.POST, url, params,
-                    new RequestCallBack<String>() {
-                        @Override
-                        public void onStart() {
-                            Log.e("iiiiiiiiii", "onStart");
-                            attachmentBean.setAttachmentID(-1 + "");
-                            attachmentBean.setFlag(1);
-                            uploadList.add(attachmentBean);
-                            documentList.add(attachmentBean);
-                            if (myRecyclerAdapter2 == null) {
-                                myRecyclerAdapter2 = new MyRecyclerAdapter2(WatchCourseActivity2.this, documentList);
-                                documentrecycleview.setAdapter(myRecyclerAdapter2);
-                            } else {
-                                myRecyclerAdapter2.notifyDataSetChanged();
-                            }
-                        }
-
-                        @Override
-                        public void onLoading(long total, long current,
-                                              boolean isUploading) {
-                            Log.e("iiiiiiiiii", total + "  " + current);
-                            myRecyclerAdapter2.setProgress(total, current, attachmentBean);
-                        }
-
-                        @Override
-                        public void onSuccess(ResponseInfo<String> responseInfo) {   // converting
-                            Log.e("iiiiiiiiii", responseInfo.result);
-                            try {
-                                JSONObject jsonObject = new JSONObject(responseInfo.result);
-                                JSONObject js = jsonObject.getJSONObject("RetData");
-                                if (js.getInt("Status") == 10) { // 上传成功  开始转换
-                                    int attachmentid = js.getInt("ItemID");
-                                    attachmentBean.setAttachmentID(attachmentid + "");
-                                    attachmentBean.setFlag(2);
-                                    myRecyclerAdapter2.setProgress(1, 0, attachmentBean);
-                                    final Timer timer = new Timer();
-                                    TimerTask timerTask = new TimerTask() {
-                                        @Override
-                                        public void run() {
-                                            convertingPercentage(attachmentBean, timer);
-                                        }
-                                    };
-                                    timer.schedule(timerTask, 0, 1000);
-                                }
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(HttpException error, String msg) {
-                            Toast.makeText(getApplicationContext(),
-                                    msg,
-                                    Toast.LENGTH_LONG).show();
-                        }
-                    });
-        } else {
-            Toast.makeText(getApplicationContext(), getString(R.string.nofile),
-                    Toast.LENGTH_LONG).show();
-        }
+        });
+        lg.GetprepareUploading(this);
     }
 
-    private void convertingPercentage(final LineItem attachmentBean, final Timer timer) {
-        new Thread(new Runnable() {
+
+    public void uploadWithTransferUtility(final LineItem attachmentBean, final Uploadao ud) {
+
+        mfile = new File(attachmentBean.getUrl());
+        fileName = mfile.getName();
+        String name2 = AppConfig.UserID + mfile.getName();
+        MD5Hash = Md5Tool.transformMD5(name2);
+
+        BasicSessionCredentials sessionCredentials = new BasicSessionCredentials(
+                ud.getAccessKeyId(),
+                ud.getAccessKeySecret(),
+                ud.getSecurityToken());
+        AmazonS3Client s3 = new AmazonS3Client(sessionCredentials);
+        TransferUtility transferUtility =
+                TransferUtility.builder()
+                        .context(getApplicationContext())
+//                                .awsConfiguration(AWSMobileClient.getInstance().getConfiguration())
+                        .s3Client(s3)
+                        .build();
+        TransferObserver uploadObserver =
+                transferUtility.upload(
+                        ud.getBucketName(),
+                        MD5Hash,
+                        mfile);
+        //开始下载
+        attachmentBean.setAttachmentID(-1 + "");
+        attachmentBean.setFlag(1);
+        uploadList.add(attachmentBean);
+        documentList.add(attachmentBean);
+        if (myRecyclerAdapter2 == null) {
+            myRecyclerAdapter2 = new MyRecyclerAdapter2(WatchCourseActivity2.this, documentList);
+            documentrecycleview.setAdapter(myRecyclerAdapter2);
+        } else {
+            myRecyclerAdapter2.notifyDataSetChanged();
+        }
+
+        uploadObserver.setTransferListener(new TransferListener() {
             @Override
-            public void run() {
-                JSONObject jsonObject = ConnectService.getIncidentbyHttpGet(AppConfig.URL_PUBLIC + "Attachment/AttachmentConvertingPercentage?attachmentIDs=" + attachmentBean.getAttachmentID());
-                Log.e("iiiiiiiiii4444", jsonObject.toString());
-                try {
-                    JSONArray jsonArray = jsonObject.getJSONArray("RetData");
-                    if (jsonArray == null) {
-                        timer.cancel();
-                    }
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                        String attachmentid = jsonObject1.getString("AttachmentID");
-                        int status = jsonObject1.getInt("Status");
-                        int Percentage = jsonObject1.getInt("Percentage");
-                        if (status == 0) {
-                            Log.e("iiiiiiiiii4444", "cancel");
-                            attachmentBean.setProgress(100);
-//                            uploadList.remove(attachmentBean);
-                            timer.cancel();
-                        } else {
-                            if (attachmentid.equals(attachmentBean.getAttachmentID())) {
-                                attachmentBean.setProgress(Percentage);
-                            }
-                        }
-                    }
+            public void onStateChanged(int id, TransferState state) {
+                Log.e("YourActivity", "id:" + id + "  state:" + state);
+                if (TransferState.COMPLETED == state) {
+                    attachmentBean.setFlag(2);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            myRecyclerAdapter2.notifyDataSetChanged();
+                            myRecyclerAdapter2.setProgress(1, 0, attachmentBean);
+                            startConverting(ud, attachmentBean);
                         }
                     });
-
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
             }
+
+            @Override
+            public void onProgressChanged(int id, final long bytesCurrent, final long bytesTotal) {
+                float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
+                int percentDone = (int) percentDonef;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        myRecyclerAdapter2.setProgress(bytesTotal, bytesCurrent, attachmentBean);
+                    }
+                });
+
+                Log.e("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
+                        + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
+            }
+
+            @Override
+            public void onError(int id, Exception ex) {
+                Log.e("YourActivity", "onError");
+            }
+
+        });
+
+    }
+
+
+    private OSS oss;
+
+    private void initOSS(final LineItem attachmentBean, final Uploadao ud) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                OSSCredentialProvider credentialProvider = new OSSStsTokenCredentialProvider(ud.getAccessKeyId(),
+                        ud.getAccessKeySecret(), ud.getSecurityToken());
+                ClientConfiguration conf = new ClientConfiguration();
+                conf.setConnectionTimeout(15 * 1000); // 连接超时，默认15秒
+                conf.setSocketTimeout(15 * 1000); // socket超时，默认15秒
+                conf.setMaxConcurrentRequest(5); // 最大并发请求数，默认5个
+                conf.setMaxErrorRetry(2);  // 失败后最大重试次数，默认2次
+                OSSLog.enableLog();
+                oss = new OSSClient(getApplicationContext(), AppConfig.OSS_ENDPOINT, credentialProvider, conf);
+//                oss = new OSSClient(getApplicationContext(), ud.getRegionName(), credentialProvider, conf);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        UpdateVideo3(attachmentBean, ud);
+                    }
+                });
+            }
         }).start();
+    }
+
+    private File mfile;
+    private String MD5Hash;
+    private String fileName;
+
+    private void UpdateVideo3(final LineItem attachmentBean, final Uploadao ud) {
+
+        String path = attachmentBean.getUrl();
+
+        mfile = new File(path);
+        fileName = mfile.getName();
+        String name2 = AppConfig.UserID + mfile.getName();
+        MD5Hash = Md5Tool.transformMD5(name2);
+
+
+        final Favorite favorite = new Favorite();
+        favorite.setFlag(1);
+        favorite.setTitle(fileName);
+        PutObjectRequest put = new PutObjectRequest(ud.getBucketName(),
+                MD5Hash, path);
+        put.setCRC64(OSSRequest.CRC64Config.YES);
+
+        //开始下载
+        attachmentBean.setAttachmentID(-1 + "");
+        attachmentBean.setFlag(1);
+        uploadList.add(attachmentBean);
+        documentList.add(attachmentBean);
+        if (myRecyclerAdapter2 == null) {
+            myRecyclerAdapter2 = new MyRecyclerAdapter2(WatchCourseActivity2.this, documentList);
+            documentrecycleview.setAdapter(myRecyclerAdapter2);
+        } else {
+            myRecyclerAdapter2.notifyDataSetChanged();
+        }
+
+        put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
+            @Override
+            public void onProgress(PutObjectRequest request, final long currentSize, final long totalSize) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        myRecyclerAdapter2.setProgress(totalSize, currentSize, attachmentBean);
+                    }
+                });
+            }
+        });
+
+//        OSSAsyncTask task =
+        oss.asyncPutObject(put, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
+            @Override
+            public void onSuccess(PutObjectRequest request, PutObjectResult result) {
+                attachmentBean.setFlag(2);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        myRecyclerAdapter2.setProgress(1, 0, attachmentBean);
+                        startConverting(ud, attachmentBean);
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(PutObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
+
+            }
+        });
+    }
+
+    private Uploadao uploadao = new Uploadao();
+
+    private void startConverting(final Uploadao ud, final LineItem attachmentBean) {
+        uploadao = ud;
+        ServiceInterfaceTools.getinstance().startConverting(AppConfig.URL_LIVEDOC + "startConverting", ServiceInterfaceTools.STARTCONVERTING,
+                uploadao, MD5Hash, fileName, targetFolderKey,
+                new ServiceInterfaceListener() {
+                    @Override
+                    public void getServiceReturnData(Object object) {
+                        Log.e("hhh", "startConvertingstartConverting");
+                        convertingPercentage(attachmentBean);
+                    }
+                });
+    }
+
+    private Timer timer1;
+    private TimerTask timerTask1;
+
+    private void convertingPercentage(final LineItem attachmentBean) {
+        timer1 = new Timer();
+        timerTask1 = new TimerTask() {
+            @Override
+            public void run() {
+                ServiceInterfaceTools.getinstance().queryConverting(AppConfig.URL_LIVEDOC + "queryConverting", ServiceInterfaceTools.QUERYCONVERTING,
+                        uploadao, MD5Hash, new ServiceInterfaceListener() {
+                            @Override
+                            public void getServiceReturnData(Object object) {
+                                Log.e("hhh", "queryConvertingqueryConverting");
+                                uploadNewFile((ConvertingResult) object, attachmentBean);
+                            }
+                        });
+            }
+        };
+        timer1.schedule(timerTask1, 1000, 1000);
+    }
+
+
+    private void uploadNewFile(final ConvertingResult convertingResult, final LineItem attachmentBean) {
+        if (convertingResult.getCurrentStatus() == 0) {  // prepare
+            attachmentBean.setProgress(0);
+        } else if (convertingResult.getCurrentStatus() == 1) { //Converting
+            attachmentBean.setProgress(convertingResult.getFinishPercent());
+        } else if (convertingResult.getCurrentStatus() == 5) { //Done
+            attachmentBean.setProgress(convertingResult.getFinishPercent());
+            if (timer1 != null) {
+                timer1.cancel();
+                timer1 = null;
+            }
+            if (timerTask1 != null) {
+                timerTask1.cancel();
+                timerTask1 = null;
+            }
+
+            uploadList.remove(attachmentBean);
+
+            ServiceInterfaceTools.getinstance().uploadNewFile(AppConfig.URL_PUBLIC + "EventAttachment/UploadNewFile", ServiceInterfaceTools.UPLOADNEWFILE,
+                    fileName, uploadao, meetingId, MD5Hash, convertingResult, isAddToFavorite, field, new ServiceInterfaceListener() {
+                        @Override
+                        public void getServiceReturnData(Object object) {
+                            Log.e("hhh", "uploadNewFileuploadNewFileuploadNewFile");
+                            Toast.makeText(WatchCourseActivity2.this, "upload success", Toast.LENGTH_LONG).show();
+                        }
+                    }
+            );
+        } else if (convertingResult.getCurrentStatus() == 3) { // Failed
+            if (timer1 != null) {
+                timer1.cancel();
+                timer1 = null;
+            }
+            if (timerTask1 != null) {
+                timerTask1.cancel();
+                timerTask1 = null;
+            }
+        }
+        myRecyclerAdapter2.notifyDataSetChanged();
+
+
     }
 
 

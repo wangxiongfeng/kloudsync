@@ -60,6 +60,8 @@ public class SyncRoomAdapter extends RecyclerView.Adapter<SyncRoomAdapter.Recycl
 
         void switchSuccess();
 
+        void item(SyncRoomBean syncRoomBean);
+
         void dismiss();
 
         void open();
@@ -106,6 +108,14 @@ public class SyncRoomAdapter extends RecyclerView.Adapter<SyncRoomAdapter.Recycl
         } else {
             holder.meetingcount.setVisibility(View.VISIBLE);
         }
+
+        holder.kk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onItemLectureListener.item(syncRoomBean);
+            }
+        });
+
         holder.moreOpation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

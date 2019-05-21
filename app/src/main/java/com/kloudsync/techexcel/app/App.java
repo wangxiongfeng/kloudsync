@@ -3,9 +3,11 @@ package com.kloudsync.techexcel.app;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.support.multidex.MultiDex;
 
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferService;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.kloudsync.techexcel.config.AppConfig;
 import com.kloudsync.techexcel.dialog.message.ChangeItemMessage;
@@ -41,6 +43,8 @@ public class App extends Application {
 		MultiDex.install(this);
 		x.Ext.init(this);
         Fresco.initialize(this);
+
+        getApplicationContext().startService(new Intent(getApplicationContext(), TransferService.class));
 
         mCrashHandler = CrashHandler.getInstance();
         mCrashHandler.init(this);

@@ -37,6 +37,14 @@ public interface TempleteCourse_interface {
     );
 
 
+    @GET("TopicAttachment/List")
+    Call<ResponseBody> getAllDocument(@Header("UserToken") String userToken, @Query("topicID") int topicID);
+
+
+
+
+
+
     @GET("Course/List")
     Observable<ResponseBody> getCourseByRxJava(@Header("UserToken") String userToken, @Query("listType") int listType,
                                                @Query("type") int type,
@@ -48,7 +56,6 @@ public interface TempleteCourse_interface {
                                                @Query("pageIndex") int pageIndex,
                                                @Query("pageSize") int pageSize
     );
-
 
 
 }

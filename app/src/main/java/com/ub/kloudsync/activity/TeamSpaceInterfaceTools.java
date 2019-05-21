@@ -35,7 +35,6 @@ public class TeamSpaceInterfaceTools {
     public static final int GETMEMBERLIST = 0x1111;
     public static final int UPDATETEAMTOPIC = 0x1112;
 
-
     private ConcurrentHashMap<Integer, TeamSpaceInterfaceListener> hashMap = new ConcurrentHashMap<>();
 
     private static TeamSpaceInterfaceTools serviceInterfaceTools;

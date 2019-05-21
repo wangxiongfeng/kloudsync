@@ -220,6 +220,7 @@ public class YinxiangPopup implements View.OnClickListener {
                 new ServiceInterfaceListener() {
                     @Override
                     public void getServiceReturnData(Object object) {
+                        Log.e("getSoundList","getSoundListgetSoundList");
                         List<SoundtrackBean> oo = (List<SoundtrackBean>) object;
                         mlist.clear();
                         mlist.addAll(oo);

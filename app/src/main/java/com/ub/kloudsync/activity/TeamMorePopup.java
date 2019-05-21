@@ -127,6 +127,7 @@ public class TeamMorePopup implements View.OnClickListener {
         this.mContext = context;
         width = mContext.getResources().getDisplayMetrics().widthPixels;
         getPopupWindowInstance();
+        mPopupWindow.setAnimationStyle(R.style.PopupAnimation3);
     }
 
     public void getPopupWindowInstance() {

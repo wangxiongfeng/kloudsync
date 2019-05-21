@@ -530,6 +530,7 @@ Please input the cell phone number to add the contact
     <string name="pastdue">Past Due</string>
     <string name="pastfinish">Finish</string>
     <string name="currentsyncroom">SyncRoom of Current Team</string>
+    <string name="addnewdoc">Add new document</string>
 
 
 </resources>

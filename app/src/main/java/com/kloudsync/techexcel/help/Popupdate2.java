@@ -135,6 +135,9 @@ public class Popupdate2 {
         if (mPopupWindow.isShowing())
             mPopupWindow.dismiss();
     }
+    public boolean isShowing() {
+       return mPopupWindow.isShowing();
+    }
 
     public void StartPop(View v) {
         if (!mPopupWindow.isShowing())

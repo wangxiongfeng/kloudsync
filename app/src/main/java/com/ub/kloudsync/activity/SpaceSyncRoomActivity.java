@@ -19,6 +19,7 @@ import com.kloudsync.techexcel.config.AppConfig;
 import com.kloudsync.techexcel.help.DialogRename;
 import com.kloudsync.techexcel.info.Customer;
 import com.kloudsync.techexcel.info.Space;
+import com.kloudsync.techexcel.linshi.LinshiActivity;
 import com.kloudsync.techexcel.service.ConnectService;
 import com.kloudsync.techexcel.start.LoginGet;
 import com.kloudsync.techexcel.tool.NetWorkHelp;
@@ -33,6 +34,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,7 +101,6 @@ public class SpaceSyncRoomActivity extends Activity implements View.OnClickListe
                         syncRoomAdapter = new SyncRoomAdapter(SpaceSyncRoomActivity.this, list);
                         syncroomRecyclerView.setAdapter(syncRoomAdapter);
                         syncRoomAdapter.setOnItemLectureListener(new SyncRoomAdapter.OnItemLectureListener() {
-
                             @Override
                             public void view(SyncRoomBean syncRoomBean) {
                                 enterSyncroom(syncRoomBean);
@@ -119,6 +120,13 @@ public class SpaceSyncRoomActivity extends Activity implements View.OnClickListe
                             }
 
                             @Override
+                            public void item(SyncRoomBean syncRoomBean) {
+                                Intent intent=new Intent(SpaceSyncRoomActivity.this, LinshiActivity.class);
+                                intent.putExtra("syncRoomBean",(Serializable) syncRoomBean);
+                                startActivity(intent);
+                            }
+
+                            @Override
                             public void dismiss() {
                                 getWindow().getDecorView().setAlpha(1.0f);
                             }
@@ -127,7 +135,6 @@ public class SpaceSyncRoomActivity extends Activity implements View.OnClickListe
                             public void open() {
                                 getWindow().getDecorView().setAlpha(0.5f);
                             }
-
                         });
                     }
                 });

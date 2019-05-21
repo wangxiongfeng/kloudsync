@@ -22,6 +22,7 @@ import com.kloudsync.techexcel.info.GroupInfo;
 import com.kloudsync.techexcel.info.School;
 import com.kloudsync.techexcel.info.Sex;
 import com.kloudsync.techexcel.info.Space;
+import com.kloudsync.techexcel.info.Uploadao;
 import com.kloudsync.techexcel.tool.NetWorkHelp;
 import com.kloudsync.techexcel.tool.PingYinUtil;
 import com.kloudsync.techexcel.ui.MainActivity;
@@ -397,6 +398,18 @@ public class LoginGet {
                                 Toast.LENGTH_SHORT).show();
                     }
                     break;
+                case AppConfig.prepareUploading:
+                    result = (String) msg.obj;
+                    Log.e("prepareUploading", result + "");
+                    if (result != null) {
+                        mJsonPU(result);
+                    } else {
+                        Toast.makeText(
+                                mContext,
+                                mContext.getResources().getString(R.string.No_Data),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                    break;
                 case AppConfig.NO_NETWORK:
                     Toast.makeText(
                             mContext,
@@ -420,7 +433,6 @@ public class LoginGet {
         }
 
     };
-
     private static void GoToLogin() {
         if (mContext != null && mContext.getClass().equals(StartUbao.class)) {
             Intent intent = new Intent(mContext, LoginActivity.class);
@@ -588,6 +600,16 @@ public class LoginGet {
 
     public void setSpaceAttachmentGetListener(SpaceAttachmentGetListener spaceAttachmentGetListener) {
         LoginGet.spaceAttachmentGetListener = spaceAttachmentGetListener;
+    }
+
+    private static prepareUploadingGetListener prepareUploadingGetListener;
+
+    public interface prepareUploadingGetListener {
+        void getUD(Uploadao ud);
+    }
+
+    public void setprepareUploadingGetListener(prepareUploadingGetListener prepareUploadingGetListener) {
+        LoginGet.prepareUploadingGetListener = prepareUploadingGetListener;
     }
 
 
@@ -874,6 +896,7 @@ public class LoginGet {
                 + id;
         newThreadGetResultBytoken(url, AppConfig.BeforeDeleteTeam);
     }
+
     /**
      * 用模糊查询的方式获取请求到的联系人
      *
@@ -905,8 +928,18 @@ public class LoginGet {
      */
     public void GetSpaceAttachment(Context context, int spaceID) {
         mContext = context;
-        String url =  AppConfig.URL_PUBLIC + "SpaceAttachment/List?spaceID="+ spaceID +"&type=0&searchText=";
+        String url = AppConfig.URL_PUBLIC + "SpaceAttachment/List?spaceID=" + spaceID + "&type=0&searchText=";
         newThreadGetResultBytoken(url, AppConfig.SpaceAttachment);
+    }
+
+    /**
+     * @param context
+     */
+    public void GetprepareUploading(Context context) {
+        mContext = context;
+        String url = AppConfig.URL_LIVEDOC + "prepareUploading?clientIp=169.235.24.133";
+//        String url = AppConfig.URL_LIVEDOC + "prepareUploading?clientIp=";
+        newThreadGetResult(url, AppConfig.prepareUploading);
     }
 
 
@@ -2017,7 +2050,7 @@ public class LoginGet {
     }
 
     protected static void mJsonGUP(String result) {
-        School school=null;
+        School school = null;
         try {
             JSONObject obj = new JSONObject(result);
             String RetCode = obj.getString("RetCode");
@@ -2047,7 +2080,7 @@ public class LoginGet {
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        }finally {
+        } finally {
             schoolTeamGetListener.getST(school);
 
         }
@@ -2094,5 +2127,44 @@ public class LoginGet {
         }
 
     }
+
+
+    private static void mJsonPU(String result) {
+        try {
+            JSONObject obj = new JSONObject(result);
+            Boolean Success = obj.getBoolean("Success");
+            if (Success) {
+                JSONObject Data = obj.getJSONObject("Data");
+                int ServiceProviderId = Data.getInt("ServiceProviderId");
+                String RegionName = Data.getString("RegionName");
+                String BucketName = Data.getString("BucketName");
+                String AccessKeyId = Data.getString("AccessKeyId");
+                String AccessKeySecret = Data.getString("AccessKeySecret");
+                String SecurityToken = Data.getString("SecurityToken");
+
+                Uploadao ud = new Uploadao();
+                ud.setAccessKeyId(AccessKeyId);
+                ud.setRegionName(RegionName);
+                ud.setAccessKeySecret(AccessKeySecret);
+                ud.setBucketName(BucketName);
+                ud.setServiceProviderId(ServiceProviderId);
+                ud.setSecurityToken(SecurityToken);
+                ud.setData(Data.toString());
+
+                prepareUploadingGetListener.getUD(ud);
+
+            } else {
+                /*String ErrorMessage = obj.getString("ErrorMessage");
+                String DetailMessage = obj.getString("DetailMessage");
+                Toast.makeText(mContext, ErrorMessage, Toast.LENGTH_SHORT).show();*/
+            }
+
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } finally {
+        }
+    }
+
 
 }

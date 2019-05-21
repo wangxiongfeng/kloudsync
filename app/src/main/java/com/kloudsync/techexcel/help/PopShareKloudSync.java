@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Handler;
 import android.support.v4.util.LruCache;
 import android.util.Log;
 import android.view.Gravity;
@@ -134,7 +135,12 @@ public class PopShareKloudSync {
         lin_moment.setOnClickListener(new myOnClick());
         lin_Scan.setOnClickListener(new myOnClick());
 
-        EnterAnim();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                EnterAnim();
+            }
+        },300);
 
 
         // 使其聚焦
@@ -148,13 +154,15 @@ public class PopShareKloudSync {
     private void EnterAnim() {
         for (int i = 0; i < lin_all.size(); i++) {
             final LinearLayout lin = lin_all.get(i);
-            lin.setAlpha(0F);
+            lin.setAlpha(0.0F);
             lin.setVisibility(View.VISIBLE);
+            Log.e("biang", lin.getHeight() + "");
             ObjectAnimator animator1 = ObjectAnimator.ofFloat(lin,
-                    "translationY", 360, 0F);
+                    "translationY", lin.getHeight(), 0F);
             ObjectAnimator animator2 = ObjectAnimator.ofFloat(lin,
-                    "alpha", 0.0F, 1F);
+                    "alpha", 0.3F, 1F);
             AnimatorSet set = new AnimatorSet();
+            set.play(animator1);
             set.play(animator1).with(animator2);
             set.setDuration(300);
             set.setInterpolator(new OvershootInterpolator());

@@ -30,10 +30,12 @@ public class AppConfig {
 //	public static String URL_PUBLIC = "http://ub.servicewise.net.cn/ub/V1/";
 //    public static String URL_PUBLIC = "http://ub.servicewise.net.cn:120/ub/V1/";
 //    public static String URL_PUBLIC = "https://pt.techexcel.com/peertime/V1/";
+//上传专用
+    public static String URL_LIVEDOC = "https://livedoc.peertime.cn/TxLiveDocumentApi/api/";
     //正式
-    public static String URL_PUBLIC = "https://api.peertime.cn/peertime/V1/";
+//    public static String URL_PUBLIC = "https://api.peertime.cn/peertime/V1/";
     //测试
-//    public static String URL_PUBLIC = "https://testapi.peertime.cn/peertime/V1/";
+    public static String URL_PUBLIC = "https://testapi.peertime.cn/peertime/V1/";
 //    public static String URL_PUBLIC = "https://testapi.peertime.cn:444/kloudsync/V1/";
 
 //    public static String URL_PUBLIC = "https://peertime.cn/peertime/V1/";
@@ -48,10 +50,10 @@ public class AppConfig {
 
     //正式
 //    public static String COURSE_SOCKET = "wss://wss.peertime.cn:8443/MeetingServer/websocket";
-    public static String COURSE_SOCKET = "ws://wss.peertime.cn:8080/MeetingServer/websocket";
+//    public static String COURSE_SOCKET = "ws://wss.peertime.cn:8080/MeetingServer/websocket";
 
     //测试
-//    public static String COURSE_SOCKET = "ws://testwss.peertime.cn:8080/MeetingServer/websocket";
+    public static String COURSE_SOCKET = "ws://testwss.peertime.cn:8080/MeetingServer/websocket";
 //  public static String COURSE_SOCKET = "wss://testwss.peertime.cn:8443/MeetingServer/websocket";
 
     public static String COURSE_SOCKET2 = "ws://wss.peertime.cn:8080/MeetingServer/websocket";
@@ -185,6 +187,7 @@ public class AppConfig {
     public static final int SpaceAttachment = 63;
     public static final int SwitchSpace = 64;
     public static final int RemoveMember = 65;
+    public static final int prepareUploading = 66;
     public static final int Upload_NoExist = -6002;
     public static final int Upload_Exist = -6003;
     public static final int COURSE_PORT = 8082;
